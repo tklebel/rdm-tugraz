@@ -28,10 +28,10 @@ create_rda_fig <- function(data, out_path, width = 10, height = 5) {
     pivot_longer(cols = starts_with("DHRP05"),
                  names_to = "var", values_to = "val") %>% 
     mutate(var_recoded = case_when(
-      str_detect(var, "01") ~ "...share data to an institutional repository or data center (provided by TU Graz)",
-      str_detect(var, "02") ~ "...share data to a non-institutional repository or data center (e.g. arXiv, GitHub)",
-      str_detect(var, "03") ~ "...share data as a supplement or appendix to a publication",
-      str_detect(var, "04") ~ "...share data through a stand-alone data publication",
+      str_detect(var, "01") ~ "...to an institutional repository or data center (provided by TU Graz)",
+      str_detect(var, "02") ~ "...to a non-institutional repository or data center (e.g. arXiv, GitHub)",
+      str_detect(var, "03") ~ "...as a supplement or appendix to a publication",
+      str_detect(var, "04") ~ "...through a stand-alone data publication",
     ) %>% str_wrap(50)) %>%
     # dropping missing values is ok, since there are few of them and they are
     # almost equally distributed among the three questions
@@ -50,7 +50,7 @@ create_rda_fig <- function(data, out_path, width = 10, height = 5) {
     coord_flip() +
     hrbrthemes::theme_ipsum(base_family = "Hind") +
     labs(x = NULL, y = NULL, fill = NULL, 
-         title = "How frequently do you/does your group...") +
+         title = "How frequently do you/does your group share data...") +
     theme(legend.position = "top")
   
   ggsave(out_path, p, width = width, height = height, dpi = 400)
