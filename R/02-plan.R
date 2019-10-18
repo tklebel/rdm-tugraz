@@ -11,5 +11,6 @@ plan <- drake_plan(
     )),
   data = raw_data %>% 
     clean_data(),
-  rda_fig = create_rda_fig(data, file_out("figs/data_sharing.png"))
+  rda_fig = create_rda_fig(data, file_out("figs/data_sharing.png")),
+  test_fig = create_test_fig(data, file_out("figs/test.png"))
 )
