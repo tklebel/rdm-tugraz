@@ -6,8 +6,7 @@ plan <- drake_plan(
       id = col_double(),
       submitdate = col_datetime(format = ""),
       lastpage = col_double(),
-      seed = col_double(),
-      `DT03[other]` = col_logical()
+      seed = col_double()
     )),
   data = raw_data %>% 
     clean_data(),
