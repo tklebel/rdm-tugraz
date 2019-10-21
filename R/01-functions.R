@@ -75,7 +75,7 @@ clean_data <- function(raw_data) {
     set_names(., str_replace_all(names(.), "\\[|\\]", "_"))
 }
 
-create_rda_fig <- function(data, out_path, width = 10, height = 5) {
+create_rda_fig <- function(data, out_path, width = 10, height = 7) {
   pdata <- data %>% 
     pivot_longer(cols = starts_with("DHRP05"),
                  names_to = "var", values_to = "val") %>% 
@@ -85,7 +85,7 @@ create_rda_fig <- function(data, out_path, width = 10, height = 5) {
       str_detect(var, "02") ~ "...to a non-institutional repository or data center (e.g. arXiv, GitHub)",
       str_detect(var, "03") ~ "...as a supplement or appendix to a publication",
       str_detect(var, "04") ~ "...through a stand-alone data publication",
-    ) %>% str_wrap(50)) %>%
+    ) %>% str_wrap(25)) %>%
     # dropping missing values is ok, since there are few of them and they are
     # almost equally distributed among the three questions
     drop_na(val) %>% 
@@ -97,14 +97,15 @@ create_rda_fig <- function(data, out_path, width = 10, height = 5) {
   
   p <- pdata %>% 
     ggplot(aes(fct_reorder(var_recoded, order), prop, fill = val)) +
-    ggchicklet::geom_chicklet(width = .7) +
+    ggchicklet::geom_chicklet(width = .6) +
     scale_y_continuous(labels = scales::percent) +
     scale_fill_brewer(palette = "Dark2") +
     coord_flip() +
-    hrbrthemes::theme_ipsum(base_family = "Hind") +
+    hrbrthemes::theme_ipsum(base_family = "Hind", base_size = 15,
+                            plot_title_size = 25, plot_margin = margin()) +
     labs(x = NULL, y = NULL, fill = NULL, 
          title = "How frequently do you/does your group share data...") +
-    theme(legend.position = "top")
+    theme(legend.position = "top", plot.title.position = "plot")
   
   ggsave(out_path, p, width = width, height = height, dpi = 400)
 }
