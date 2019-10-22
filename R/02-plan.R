@@ -13,7 +13,7 @@ plan <- drake_plan(
   labels = make_labels(
     file_in("data/label_basis.csv")
   ),
-  rda_fig = create_rda_fig(data, labels, file_out("figs/data_sharing.png")),
+  rda_fig = create_rda_fig(data, labels, file_out("figs/final/data_sharing.png")),
   # this could then be generalized by using `crossing`, and using paste to 
   # create out files. so we would have a single function that generalizes 
   # `create_test_fig` to a range of figures. Problematic though: this will
@@ -21,5 +21,5 @@ plan <- drake_plan(
   # For printing, I will probably end up with single functions per single fig.
   # Maybe then not to spend too much time on getting this first version right, 
   # as it is only for exploratory purposes
-  test_fig = create_test_fig(data, labels, file_out("figs/test.png"))
+  test_fig = create_test_fig(data, labels, file_out("figs/descriptive/test.png"))
 )
