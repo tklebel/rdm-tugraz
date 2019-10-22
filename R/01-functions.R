@@ -32,9 +32,7 @@ make_univ_fig <- function(data, labels, var, .drop_na, order_string) {
     # stop if we have multiple titles for unknown reason
     stopifnot(identical(length(title), 1L))
     
-    if (.drop_na) pdata <- drop_na(pdata)
-    
-    
+
     # determine type of response category and recode accordingly
     if (any(str_detect(pdata$val, "Always, or"), na.rm = T)) {
       pdata <- pdata %>% 
@@ -51,6 +49,14 @@ make_univ_fig <- function(data, labels, var, .drop_na, order_string) {
         mutate(val = factor(val, levels = c(
           "To a very large extent", "To a large extent", "To some extent",
           "To little or no extent at all", "Do not know/cannot answer")))
+    }
+    
+    
+    
+    if (.drop_na) {
+      pdata <- drop_na(pdata)
+    } else {
+      pdata$val <- fct_explicit_na(pdata$val)
     }
   
     
