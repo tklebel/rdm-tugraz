@@ -14,22 +14,10 @@ plan <- drake_plan(
     file_in("data/label_basis.csv")
   ),
   rda_fig = create_rda_fig(data, labels, file_out("figs/final/data_sharing.png")),
-  # this could then be generalized by using `crossing`, and using paste to 
-  # create out files. so we would have a single function that generalizes 
-  # `create_test_fig` to a range of figures. Problematic though: this will
-  # not allow for the necessary degree of customization. 
-  # For printing, I will probably end up with single functions per single fig.
-  # Maybe then not to spend too much time on getting this first version right, 
-  # as it is only for exploratory purposes
-  # test_fig = create_test_fig(data, labels, file_out("figs/descriptive/test.png"))
   descriptive_graphs = target(
-    save_univ_fig(data, labels, var, sort_string, out_path),
+    save_univ_fig(data, labels, var, sort_string),
     transform = map(data = data, labels = labels, 
                     var = c("DHRP05", "DHRP03b"),
-                    sort_string = c("Sometimes", "Sometimes"),
-                    out_path = c(
-                      file_out("figs/descriptive/DHRP05.png"),
-                      file_out("figs/descriptive/DHRP03b.png")
-                    ))
+                    sort_string = c("Sometimes", "Sometimes"))
   )
 )

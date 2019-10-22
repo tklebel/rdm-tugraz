@@ -138,7 +138,8 @@ save_univ_fig <- function(data, labels, var, sort_string, out_path,
   p <- make_univ_fig(data, labels, var, .drop_na = .drop_na, sort_string)
   # p <- make_univ_fig(data, labels, "DHRP05", .drop_na = T, "Sometimes")
   
-  ggsave(out_path, p, width = 10, height = 7, dpi = 300)
+  ggsave(file_out(file.path("figs/descriptive", paste0(var, ".png"))), p, 
+         width = 10, height = 7, dpi = 300)
 }
 
 
