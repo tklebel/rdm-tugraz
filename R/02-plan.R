@@ -1,3 +1,14 @@
+descriptives_grid <- tribble(
+  ~var,        ~sort_string,
+  "DHRP05",    "Sometimes",
+  "DHRP03b",   "Sometimes",
+  "DQ03",      "",
+  "ORDM02",    "large|some",
+  "DHRP02",     "Always|Most|Sometimes"
+)
+
+
+
 plan <- drake_plan(
   raw_data = read_csv(
     file_in("data/results-survey896447.csv"),
@@ -16,8 +27,6 @@ plan <- drake_plan(
   rda_fig = create_rda_fig(data, labels, file_out("figs/final/data_sharing.png")),
   descriptive_graphs = target(
     save_univ_fig(data, labels, var, sort_string),
-    transform = map(data = data, labels = labels, 
-                    var = c("DHRP05", "DHRP03b", "DQ03", "ORDM02"),
-                    sort_string = c("Sometimes", "Sometimes", "", "large|some"))
+    transform = map(data = data, labels = labels, .data = !!descriptives_grid)
   )
 )
