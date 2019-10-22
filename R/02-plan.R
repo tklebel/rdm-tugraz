@@ -4,6 +4,8 @@ descriptives_grid <- tribble(
   "ORDM02",    "large|some",
   "DHRP02",     "Always|Most|Sometimes",
   "DHRP03b",    "Always|Most|Sometimes",
+  "DHRP03c",    "Always|Most|Sometimes",
+  "DHRP04",    "Always|Most|Sometimes",
   "DHRP05",    "Sometimes",
   "DHRP06",     "\\sagree",
   
