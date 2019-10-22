@@ -1,10 +1,12 @@
 descriptives_grid <- tribble(
   ~var,        ~sort_string,
-  "DHRP05",    "Sometimes",
-  "DHRP03b",   "Sometimes",
   "DQ03",      "",
   "ORDM02",    "large|some",
-  "DHRP02",     "Always|Most|Sometimes"
+  "DHRP02",     "Always|Most|Sometimes",
+  "DHRP03b",    "Always|Most|Sometimes",
+  "DHRP05",    "Sometimes",
+  "DHRP06",     "\\sagree",
+  
 )
 
 
