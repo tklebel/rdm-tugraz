@@ -18,13 +18,19 @@ make_proportion <- function(df, var, group, order_string = NA_character_,
     )
 }
 
+
+data_sizes <- c("< 10 GB", "10 GB - 99 GB", "100 GB - 999 GB", "1 TB - 10 TB", 
+                "10 TB - 100 TB", "> 100 TB", "No Answer")
+
+
+
 make_univ_fig <- function(data, labels, var, .drop_na, order_string) {
     pdata <- data %>% 
       pivot_longer(cols = starts_with(var),
                    names_to = "var", values_to = "val") %>% 
       select(var, val) %>% 
       left_join(labels, by = "var") %>% 
-      mutate(label = str_wrap(label, 25))
+      mutate(label = str_wrap(label, 45))
     
     
     title <- unique(pdata$question)
@@ -49,6 +55,9 @@ make_univ_fig <- function(data, labels, var, .drop_na, order_string) {
         mutate(val = factor(val, levels = c(
           "To a very large extent", "To a large extent", "To some extent",
           "To little or no extent at all", "Do not know/cannot answer")))
+    } else if (any(str_detect(pdata$val, "100 GB"), na.rm = T)) {
+      pdata <- pdata %>% 
+        mutate(val = factor(val, levels = data_sizes))
     }
     
     
@@ -73,10 +82,7 @@ make_univ_fig <- function(data, labels, var, .drop_na, order_string) {
       labs(x = NULL, y = NULL, fill = NULL, 
            title = title) +
       theme(legend.position = "top")
-    
-  
 }
-
 
 
 
@@ -138,8 +144,11 @@ save_univ_fig <- function(data, labels, var, sort_string, out_path,
   p <- make_univ_fig(data, labels, var, .drop_na = .drop_na, sort_string)
   # p <- make_univ_fig(data, labels, "DHRP05", .drop_na = T, "Sometimes")
   
+  # determine necessary height of plot from number of rows in plot
+  n_vars <- p$data$label %>% unique() %>% length()
+  
   ggsave(file_out(file.path("figs/descriptive", paste0(var, ".png"))), p, 
-         width = 10, height = 7, dpi = 300)
+         width = 10, height = 1.5 + sqrt(n_vars * 4))
 }
 
 

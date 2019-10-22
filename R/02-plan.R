@@ -17,7 +17,7 @@ plan <- drake_plan(
   descriptive_graphs = target(
     save_univ_fig(data, labels, var, sort_string),
     transform = map(data = data, labels = labels, 
-                    var = c("DHRP05", "DHRP03b"),
-                    sort_string = c("Sometimes", "Sometimes"))
+                    var = c("DHRP05", "DHRP03b", "DQ03", "ORDM02"),
+                    sort_string = c("Sometimes", "Sometimes", "", "large|some"))
   )
 )
