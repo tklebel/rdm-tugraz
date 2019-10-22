@@ -22,9 +22,8 @@ make_proportion <- function(df, var, group, order_string = NA_character_,
 data_sizes <- c("< 10 GB", "10 GB - 99 GB", "100 GB - 999 GB", "1 TB - 10 TB", 
                 "10 TB - 100 TB", "> 100 TB", "No Answer")
 
-
-
-make_univ_fig <- function(data, labels, var, .drop_na, order_string) {
+make_univ_fig <- function(data, labels, var, sort_string, out_path, 
+                          .drop_na = FALSE) {
     pdata <- data %>% 
       pivot_longer(cols = starts_with(var),
                    names_to = "var", values_to = "val") %>% 
@@ -70,9 +69,9 @@ make_univ_fig <- function(data, labels, var, .drop_na, order_string) {
   
     
     pdata <- pdata %>% 
-      make_proportion(val, label, order_string = order_string)
+      make_proportion(val, label, order_string = sort_string)
     
-    pdata %>% 
+    p <- pdata %>% 
       ggplot(aes(fct_reorder(label, order), prop, fill = val)) +
       ggchicklet::geom_chicklet(width = .7) +
       scale_y_continuous(labels = scales::percent) +
@@ -82,7 +81,15 @@ make_univ_fig <- function(data, labels, var, .drop_na, order_string) {
       labs(x = NULL, y = NULL, fill = NULL, 
            title = title) +
       theme(legend.position = "top", plot.title.position = "plot")
+    
+    
+    n_vars <- pdata$label %>% unique() %>% length()
+    
+    ggsave(file_out(file.path("figs/descriptive", paste0(var, ".png"))), p, 
+           width = 10, height = 1.5 + sqrt(n_vars * 4))
+    
 }
+
 
 
 
@@ -139,17 +146,6 @@ create_rda_fig <- function(data, labels, out_path, width = 10, height = 7) {
   ggsave(out_path, p, width = width, height = height, dpi = 400)
 }
 
-save_univ_fig <- function(data, labels, var, sort_string, out_path, 
-                          .drop_na = F) {
-  p <- make_univ_fig(data, labels, var, .drop_na = .drop_na, sort_string)
-  # p <- make_univ_fig(data, labels, "DHRP05", .drop_na = T, "Sometimes")
-  
-  # determine necessary height of plot from number of rows in plot
-  n_vars <- p$data$label %>% unique() %>% length()
-  
-  ggsave(file_out(file.path("figs/descriptive", paste0(var, ".png"))), p, 
-         width = 10, height = 1.5 + sqrt(n_vars * 4))
-}
 
 
 

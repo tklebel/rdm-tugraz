@@ -30,7 +30,7 @@ plan <- drake_plan(
   ),
   rda_fig = create_rda_fig(data, labels, file_out("figs/final/data_sharing.png")),
   descriptive_graphs = target(
-    save_univ_fig(data, labels, var, sort_string),
+    make_univ_fig(data, labels, var, sort_string),
     transform = map(data = data, labels = labels, .data = !!descriptives_grid)
   )
 )
