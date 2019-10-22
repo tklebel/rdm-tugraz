@@ -18,28 +18,35 @@ make_proportion <- function(df, var, group, order_string = NA_character_,
     )
 }
 
-make_univ_fig <- function(data, var, .drop_na, order_string,
-                         title) {
+make_univ_fig <- function(data, labels, var, .drop_na, order_string) {
     pdata <- data %>% 
       pivot_longer(cols = starts_with(var),
                    names_to = "var", values_to = "val") %>% 
-      select(var, val) 
+      select(var, val) %>% 
+      left_join(labels, by = "var") %>% 
+      mutate(label = str_wrap(label, 25))
+    
+    
+    title <- unique(pdata$question)
+    
+    # stop if we have multiple titles for unknown reason
+    stopifnot(identical(length(title), 1L))
     
     if (.drop_na) pdata <- drop_na(pdata)
     
     
     # determine type of response category and recode accordingly
-    if (str_detect(pdata$val, "Always, or")) {
+    if (any(str_detect(pdata$val, "Always, or"))) {
       pdata <- pdata %>% 
         mutate(val = factor(val, levels = c(
           "Always, or almost always", "Most of the time", "Sometimes",
           "Rarely", "Never, or almost never", "Do not know/cannot answer")))
-    } else if (str_detect(pdata$val, "Completely agree")) {
+    } else if (any(str_detect(pdata$val, "Completely agree"))) {
       pdata <- pdata %>% 
         mutate(val = factor(val, levels = c(
           "Completely agree", "Tend to agree", "Tend to disagree",
           "Completely disagree", "Do not know/cannot answer")))
-    } else if (str_detect(pdata$val, "To a ")) {
+    } else if (any(str_detect(pdata$val, "To a "))) {
       pdata <- pdata %>% 
         mutate(val = factor(val, levels = c(
           "To a very large extent", "To a large extent", "To some extent",
@@ -48,10 +55,10 @@ make_univ_fig <- function(data, var, .drop_na, order_string,
   
     
     pdata <- pdata %>% 
-      make_proportion(val, var, order_string = order_string)
+      make_proportion(val, label, order_string = order_string)
     
     pdata %>% 
-      ggplot(aes(fct_reorder(var, order), prop, fill = val)) +
+      ggplot(aes(fct_reorder(label, order), prop, fill = val)) +
       ggchicklet::geom_chicklet(width = .7) +
       scale_y_continuous(labels = scales::percent) +
       scale_fill_brewer(palette = "Dark2") +
@@ -75,28 +82,38 @@ clean_data <- function(raw_data) {
     set_names(., str_replace_all(names(.), "\\[|\\]", "_"))
 }
 
-create_rda_fig <- function(data, out_path, width = 10, height = 7) {
-  pdata <- data %>% 
+make_labels <- function(labels) {
+  read_csv(labels, n_max = 1,
+           col_types = cols(
+             .default = col_character()
+           )) %>% 
+    pivot_longer(everything(), names_to = c("var", "question", "label"), 
+                 names_pattern = "(.*)_(.*)\\s\\[(.*)\\]") %>% 
+    mutate(var = str_replace_all(var,  "\\[|\\]", "_")) %>% 
+    select(-value)
+}
+
+create_rda_fig <- function(data, labels, out_path, width = 10, height = 7) {
+  base_data <- data %>% 
     pivot_longer(cols = starts_with("DHRP05"),
                  names_to = "var", values_to = "val") %>% 
     select(var, val) %>% 
-    mutate(var_recoded = case_when(
-      str_detect(var, "01") ~ "...to an institutional repository or data center (provided by TU Graz)",
-      str_detect(var, "02") ~ "...to a non-institutional repository or data center (e.g. arXiv, GitHub)",
-      str_detect(var, "03") ~ "...as a supplement or appendix to a publication",
-      str_detect(var, "04") ~ "...through a stand-alone data publication",
-    ) %>% str_wrap(25)) %>%
+    left_join(labels, by = "var") %>% 
+    mutate(label = str_remove_all(label, "share data "),
+           label = str_wrap(label, 25)) %>% 
     # dropping missing values is ok, since there are few of them and they are
     # almost equally distributed among the three questions
     drop_na(val) %>% 
     mutate(val = factor(val, levels = c(
       "Always, or almost always", "Most of the time", "Sometimes", 
-      "Rarely", "Never, or almost never", "Do not know/cannot answer"))) %>% 
-    make_proportion(val, var_recoded, order_string = "Sometimes")
+      "Rarely", "Never, or almost never", "Do not know/cannot answer")))
+  
+  pdata <- base_data %>% 
+    make_proportion(val, label, order_string = "Sometimes")
   
   
   p <- pdata %>% 
-    ggplot(aes(fct_reorder(var_recoded, order), prop, fill = val)) +
+    ggplot(aes(fct_reorder(label, order), prop, fill = val)) +
     ggchicklet::geom_chicklet(width = .6) +
     scale_y_continuous(labels = scales::percent) +
     scale_fill_brewer(palette = "Dark2") +
@@ -110,10 +127,10 @@ create_rda_fig <- function(data, out_path, width = 10, height = 7) {
   ggsave(out_path, p, width = width, height = height, dpi = 400)
 }
 
-create_test_fig <- function(data, out_path) {
-  p <- make_univ_fig(data, "DHRP05", .drop_na = T, "Sometimes", "test-title")
+create_test_fig <- function(data, labels, out_path) {
+  p <- make_univ_fig(data, labels, "DHRP05", .drop_na = T, "Sometimes")
   
-  ggsave(out_path, p, width = 10, height = 5, dpi = 400)
+  ggsave(out_path, p, width = 10, height = 7, dpi = 300)
 }
 
 
