@@ -33,7 +33,7 @@ make_univ_fig <- function(data, labels, var, .drop_na, order_string) {
       mutate(label = str_wrap(label, 45))
     
     
-    title <- unique(pdata$question)
+    title <- unique(pdata$question) %>% str_wrap()
     
     # stop if we have multiple titles for unknown reason
     stopifnot(identical(length(title), 1L))
@@ -81,7 +81,7 @@ make_univ_fig <- function(data, labels, var, .drop_na, order_string) {
       hrbrthemes::theme_ipsum(base_family = "Hind") +
       labs(x = NULL, y = NULL, fill = NULL, 
            title = title) +
-      theme(legend.position = "top")
+      theme(legend.position = "top", plot.title.position = "plot")
 }
 
 
