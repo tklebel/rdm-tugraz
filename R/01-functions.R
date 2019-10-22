@@ -84,9 +84,8 @@ make_univ_fig <- function(data, labels, var, sort_string, out_path,
     
     
     n_vars <- pdata$label %>% unique() %>% length()
-    
-    ggsave(file_out(file.path("figs/descriptive", paste0(var, ".png"))), p, 
-           width = 10, height = 1.5 + sqrt(n_vars * 4))
+
+    ggsave(out_path, p, width = 10, height = 1.5 + sqrt(n_vars * 4))
     
 }
 
