@@ -36,17 +36,17 @@ make_univ_fig <- function(data, labels, var, .drop_na, order_string) {
     
     
     # determine type of response category and recode accordingly
-    if (any(str_detect(pdata$val, "Always, or"))) {
+    if (any(str_detect(pdata$val, "Always, or"), na.rm = T)) {
       pdata <- pdata %>% 
         mutate(val = factor(val, levels = c(
           "Always, or almost always", "Most of the time", "Sometimes",
           "Rarely", "Never, or almost never", "Do not know/cannot answer")))
-    } else if (any(str_detect(pdata$val, "Completely agree"))) {
+    } else if (any(str_detect(pdata$val, "Completely agree"), na.rm = T)) {
       pdata <- pdata %>% 
         mutate(val = factor(val, levels = c(
           "Completely agree", "Tend to agree", "Tend to disagree",
           "Completely disagree", "Do not know/cannot answer")))
-    } else if (any(str_detect(pdata$val, "To a "))) {
+    } else if (any(str_detect(pdata$val, "To a "), na.rm = T)) {
       pdata <- pdata %>% 
         mutate(val = factor(val, levels = c(
           "To a very large extent", "To a large extent", "To some extent",
@@ -127,8 +127,10 @@ create_rda_fig <- function(data, labels, out_path, width = 10, height = 7) {
   ggsave(out_path, p, width = width, height = height, dpi = 400)
 }
 
-create_test_fig <- function(data, labels, out_path) {
-  p <- make_univ_fig(data, labels, "DHRP05", .drop_na = T, "Sometimes")
+save_univ_fig <- function(data, labels, var, sort_string, out_path, 
+                          .drop_na = F) {
+  p <- make_univ_fig(data, labels, var, .drop_na = .drop_na, sort_string)
+  # p <- make_univ_fig(data, labels, "DHRP05", .drop_na = T, "Sometimes")
   
   ggsave(out_path, p, width = 10, height = 7, dpi = 300)
 }

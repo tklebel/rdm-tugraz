@@ -21,5 +21,15 @@ plan <- drake_plan(
   # For printing, I will probably end up with single functions per single fig.
   # Maybe then not to spend too much time on getting this first version right, 
   # as it is only for exploratory purposes
-  test_fig = create_test_fig(data, labels, file_out("figs/descriptive/test.png"))
+  # test_fig = create_test_fig(data, labels, file_out("figs/descriptive/test.png"))
+  descriptive_graphs = target(
+    save_univ_fig(data, labels, var, sort_string, out_path),
+    transform = map(data = data, labels = labels, 
+                    var = c("DHRP05", "DHRP03b"),
+                    sort_string = c("Sometimes", "Sometimes"),
+                    out_path = c(
+                      file_out("figs/descriptive/DHRP05.png"),
+                      file_out("figs/descriptive/DHRP03b.png")
+                    ))
+  )
 )
