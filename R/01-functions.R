@@ -19,8 +19,13 @@ make_proportion <- function(df, var, ..., order_string = NA_character_,
 }
 
 
-data_sizes <- c("< 10 GB", "10 GB - 99 GB", "100 GB - 999 GB", "1 TB - 10 TB", 
-                "10 TB - 100 TB", "> 100 TB", "No Answer")
+data_sizes_storage <- c("< 10 GB", "10 GB - 99 GB", "100 GB - 999 GB", 
+                        "1 TB - 10 TB", "10 TB - 100 TB", "> 100 TB", 
+                        "No Answer")
+
+data_sizes_production <- c("< 1 MB", "Up to 99 MB", "100 MB - 999 MB", 
+                           "1 GB - 9 GB", "10 GB - 99 GB", "100 GB - 499 GB", 
+                           "> 500 GB")
 
 make_univ_fig <- function(data, labels, var, sort_string, out_path, 
                           .drop_na = FALSE) {
@@ -54,9 +59,12 @@ make_univ_fig <- function(data, labels, var, sort_string, out_path,
         mutate(val = factor(val, levels = c(
           "To a very large extent", "To a large extent", "To some extent",
           "To little or no extent at all", "Do not know/cannot answer")))
-    } else if (any(str_detect(pdata$val, "100 GB"), na.rm = T)) {
+    } else if (any(str_detect(pdata$val, "500 GB"), na.rm = T)) {
       pdata <- pdata %>% 
-        mutate(val = factor(val, levels = data_sizes))
+        mutate(val = factor(val, levels = data_sizes_storage))
+    } else if (any(str_detect(pdata$val, "99 MB"), na.rm = T)) {
+      pdata <- pdata %>% 
+        mutate(val = factor(val, levels = data_sizes_production))
     }
     
     
@@ -174,6 +182,31 @@ create_data_amount <- function(data, labels, out_path) {
   
 }
 
+
+create_data_size <- function(data, labels, out_path) {
+  pdata <- data %>% 
+    select(DQ01, D06) %>% 
+    make_proportion(DQ01, D06, order_string = "MB", .drop_na = F) %>% 
+    mutate(DQ01 = factor(DQ01, levels = data_sizes_production)) %>% 
+    filter(!is.na(D06))
+  
+  title <- "How big are the data sets you work with in a typical research project?"
+  
+  p <- pdata %>% 
+    ggplot(aes(fct_reorder(str_wrap(D06, 40), order), prop, fill = DQ01)) +
+    ggchicklet::geom_chicklet(width = .7) +
+    scale_y_continuous(labels = scales::percent) +
+    scale_fill_brewer(palette = "Dark2") +
+    coord_flip() +
+    hrbrthemes::theme_ipsum(base_family = "Hind") +
+    labs(x = NULL, y = NULL, fill = NULL, 
+         title = title) +
+    theme(legend.position = "top", plot.title.position = "plot")
+  
+  
+  ggsave(out_path, p, width = 9, height = 6)
+  
+}
 
 
 
