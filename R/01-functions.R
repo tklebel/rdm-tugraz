@@ -1,8 +1,8 @@
 # Helper functions ------
-make_proportion <- function(df, var, group, order_string = NA_character_,
+make_proportion <- function(df, var, ..., order_string = NA_character_,
                             .drop_na = FALSE) {
   counts <- df %>%
-    group_by({{group}}) %>%
+    group_by(...) %>%
     count({{var}})
   
   if (.drop_na) {
@@ -145,6 +145,34 @@ create_rda_fig <- function(data, labels, out_path, width = 10, height = 7) {
   ggsave(out_path, p, width = width, height = height, dpi = 400)
 }
 
+
+create_data_amount <- function(data, labels, out_path) {
+  pdata <- data %>% 
+    pivot_longer(cols = starts_with("DT01"),
+                 names_to = "var", values_to = "val") %>% 
+    select(var, val, D06) %>% 
+    filter(val %in% c("Yes", "No")) %>% 
+    make_proportion(val, D06, var, order_string = "Yes", .drop_na = T) %>% 
+    left_join(labels, by = "var") 
+  
+  title <- unique(pdata$question) %>% str_wrap()
+  
+  p <- pdata %>% 
+    ggplot(aes(fct_rev(str_wrap(D06, 40)), prop, fill = fct_rev(val))) +
+    ggchicklet::geom_chicklet(width = .7) +
+    scale_y_continuous(labels = scales::percent) +
+    scale_fill_brewer(palette = "Dark2") +
+    coord_flip() +
+    facet_wrap(vars(label), ncol = 3) +
+    hrbrthemes::theme_ipsum(base_family = "Hind") +
+    labs(x = NULL, y = NULL, fill = NULL, 
+         title = title) +
+    theme(legend.position = "top", plot.title.position = "plot")
+  
+  
+  ggsave(out_path, p, width = 12, height = 16)
+  
+}
 
 
 
