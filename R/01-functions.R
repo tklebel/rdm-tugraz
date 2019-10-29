@@ -81,11 +81,11 @@ make_univ_fig <- function(data, labels, var, sort_string, out_path,
     
     p <- pdata %>% 
       ggplot(aes(fct_reorder(label, order), prop, fill = val)) +
-      ggchicklet::geom_chicklet(width = .7) +
-      scale_y_continuous(labels = scales::percent) +
+      geom_chicklet(width = .7) +
+      scale_y_continuous(labels = percent) +
       scale_fill_brewer(palette = "Dark2") +
       coord_flip() +
-      hrbrthemes::theme_ipsum(base_family = "Hind") +
+      theme_ipsum(base_family = "Hind") +
       labs(x = NULL, y = NULL, fill = NULL, 
            title = title) +
       theme(legend.position = "top", plot.title.position = "plot")
@@ -140,12 +140,12 @@ create_rda_fig <- function(data, labels, out_path, width = 10, height = 7) {
   
   p <- pdata %>% 
     ggplot(aes(fct_reorder(label, order), prop, fill = val)) +
-    ggchicklet::geom_chicklet(width = .6) +
-    scale_y_continuous(labels = scales::percent) +
+    geom_chicklet(width = .6) +
+    scale_y_continuous(labels = percent) +
     scale_fill_brewer(palette = "Dark2") +
     coord_flip() +
-    hrbrthemes::theme_ipsum(base_family = "Hind", base_size = 15,
-                            plot_title_size = 25, plot_margin = margin()) +
+    theme_ipsum(base_family = "Hind", base_size = 15,
+                plot_title_size = 25, plot_margin = margin()) +
     labs(x = NULL, y = NULL, fill = NULL, 
          title = "How frequently do you/does your group share data...") +
     theme(legend.position = "top", plot.title.position = "plot")
@@ -167,12 +167,12 @@ create_data_amount <- function(data, labels, out_path) {
   
   p <- pdata %>% 
     ggplot(aes(fct_rev(str_wrap(D06, 40)), prop, fill = fct_rev(val))) +
-    ggchicklet::geom_chicklet(width = .7) +
-    scale_y_continuous(labels = scales::percent) +
+    geom_chicklet(width = .7) +
+    scale_y_continuous(labels = percent) +
     scale_fill_brewer(palette = "Dark2") +
     coord_flip() +
     facet_wrap(vars(label), ncol = 3) +
-    hrbrthemes::theme_ipsum(base_family = "Hind") +
+    theme_ipsum(base_family = "Hind") +
     labs(x = NULL, y = NULL, fill = NULL, 
          title = title) +
     theme(legend.position = "top", plot.title.position = "plot")
@@ -194,11 +194,11 @@ create_data_size <- function(data, labels, out_path) {
   
   p <- pdata %>% 
     ggplot(aes(fct_reorder(str_wrap(D06, 40), order), prop, fill = DQ01)) +
-    ggchicklet::geom_chicklet(width = .7) +
-    scale_y_continuous(labels = scales::percent) +
+    geom_chicklet(width = .7) +
+    scale_y_continuous(labels = percent) +
     scale_fill_brewer(palette = "Dark2") +
     coord_flip() +
-    hrbrthemes::theme_ipsum(base_family = "Hind") +
+    theme_ipsum(base_family = "Hind") +
     labs(x = NULL, y = NULL, fill = NULL, 
          title = title) +
     theme(legend.position = "top", plot.title.position = "plot")
