@@ -154,7 +154,7 @@ create_rda_fig <- function(data, labels, out_path, width = 10, height = 7) {
 }
 
 
-create_data_amount <- function(data, labels, out_path) {
+create_data_type <- function(data, labels, out_path) {
   pdata <- data %>% 
     pivot_longer(cols = starts_with("DT01"),
                  names_to = "var", values_to = "val") %>% 

@@ -33,6 +33,6 @@ plan <- drake_plan(
     make_univ_fig(data, labels, var, sort_string, file_out(out_path)),
     transform = map(data = data, labels = labels, .data = !!descriptives_grid)
   ),
-  data_amount = create_data_amount(data, labels, file_out("figs/final/data_amount.png")),
+  data_type = create_data_type(data, labels, file_out("figs/final/data_type.png")),
   data_size = create_data_size(data, labels, file_out("figs/final/data_size.png"))
 )
