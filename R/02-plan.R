@@ -29,10 +29,14 @@ plan <- drake_plan(
     file_in("data/label_basis.csv")
   ),
   rda_fig = create_rda_fig(data, labels, file_out("figs/final/data_sharing.png")),
+  data_sharing_cat = create_data_sharing_cat(data, labels, file_out("figs/final/data_sharing_cat.png")),
   descriptive_graphs = target(
     make_univ_fig(data, labels, var, sort_string, file_out(out_path)),
     transform = map(data = data, labels = labels, .data = !!descriptives_grid)
   ),
   data_type = create_data_type(data, labels, file_out("figs/final/data_type.png")),
-  data_size = create_data_size(data, labels, file_out("figs/final/data_size.png"))
+  data_type2 = create_data_type2(data, labels, file_out("figs/final/data_type_2.png")),
+  data_size = create_data_size(data, labels, file_out("figs/final/data_size.png")),
+  data_per_year = create_data_per_year(data, labels, file_out("figs/final/data_per_year.png")),
+  data_per_year_cat = create_data_per_year_cat(data, labels, file_out("figs/final/data_per_year_cat.png"))
 )

@@ -27,6 +27,9 @@ data_sizes_production <- c("< 1 MB", "Up to 99 MB", "100 MB - 999 MB",
                            "1 GB - 9 GB", "10 GB - 99 GB", "100 GB - 499 GB", 
                            "> 500 GB")
 
+data_size_per_year <- c("0 - 99 GB", "100 GB - 499 GB", "500 GB - 900 GB", 
+                   "1 TB - 5 TB", "> 5 TB")
+
 make_univ_fig <- function(data, labels, var, sort_string, out_path, 
                           .drop_na = FALSE) {
     pdata <- data %>% 
@@ -153,6 +156,43 @@ create_rda_fig <- function(data, labels, out_path, width = 10, height = 7) {
   ggsave(out_path, p, width = width, height = height, dpi = 400)
 }
 
+create_data_sharing_cat <- function(data, labels, out_path) {
+  base_data <- data %>% 
+    pivot_longer(cols = starts_with("DHRP05"),
+                 names_to = "var", values_to = "val") %>% 
+    select(var, val) %>% 
+    left_join(labels, by = "var") %>% 
+    mutate(label = str_remove_all(label, "share data "),
+           label = str_wrap(label, 25)) %>% 
+    mutate(val = case_when(
+      str_detect(val, "Never") ~ "No",
+      str_detect(val, "know") ~ NA_character_,
+      TRUE ~ "Yes"
+    ) %>% factor(levels = c("Yes", "No"))) %>% 
+    # dropping missing values is ok, since there are few of them and they are
+    # almost equally distributed among the three questions
+    drop_na(val)
+    
+  
+  pdata <- base_data %>% 
+    make_proportion(val, label, order_string = "Yes")
+  
+  
+  p <- pdata %>% 
+    ggplot(aes(fct_reorder(label, order), prop, fill = val)) +
+    geom_chicklet(width = .6) +
+    scale_y_continuous(labels = percent) +
+    scale_fill_brewer(palette = "Dark2") +
+    coord_flip() +
+    theme_ipsum(base_family = "Hind", base_size = 15,
+                plot_title_size = 25) +
+    labs(x = NULL, y = NULL, fill = NULL, 
+         title = "Do you/does your group share data...") +
+    theme(legend.position = "top", plot.title.position = "plot")
+  
+  ggsave(out_path, p, width = 10, height = 7)
+}
+
 
 create_data_type <- function(data, labels, out_path) {
   pdata <- data %>% 
@@ -182,6 +222,33 @@ create_data_type <- function(data, labels, out_path) {
   
 }
 
+create_data_type2 <- function(data, labels, out_path) {
+  pdata <- data %>% 
+    pivot_longer(cols = starts_with("DT02"),
+                 names_to = "var", values_to = "val") %>% 
+    select(var, val, D06) %>% 
+    filter(val %in% c("Yes", "No")) %>% 
+    make_proportion(val, D06, var, order_string = "Yes", .drop_na = T) %>% 
+    left_join(labels, by = "var") 
+  
+  title <- unique(pdata$question) %>% str_wrap()
+  
+  p <- pdata %>% 
+    ggplot(aes(fct_rev(str_wrap(D06, 40)), prop, fill = fct_rev(val))) +
+    geom_chicklet(width = .7) +
+    scale_y_continuous(labels = percent) +
+    scale_fill_brewer(palette = "Dark2") +
+    coord_flip() +
+    facet_wrap(vars(label), ncol = 3) +
+    theme_ipsum(base_family = "Hind") +
+    labs(x = NULL, y = NULL, fill = NULL, 
+         title = title) +
+    theme(legend.position = "top", plot.title.position = "plot")
+  
+  
+  ggsave(out_path, p, width = 12, height = 10)
+  
+}
 
 create_data_size <- function(data, labels, out_path) {
   pdata <- data %>% 
@@ -208,5 +275,59 @@ create_data_size <- function(data, labels, out_path) {
   
 }
 
+
+create_data_per_year <- function(data, labels, out_path) {
+  pdata <- data %>% 
+    select(DQ02, D06) %>% 
+    make_proportion(DQ02, D06, order_string = "99", .drop_na = T) %>% 
+    mutate(DQ02 = factor(DQ02, levels = data_size_per_year)) %>%
+    filter(!is.na(D06))
+  
+  title <- "How much data do you handle in the course of your research,\non average, per year?"
+  
+  p <- pdata %>% 
+    ggplot(aes(fct_reorder(str_wrap(D06, 40), order), prop, fill = DQ02)) +
+    geom_chicklet(width = .7) +
+    scale_y_continuous(labels = percent) +
+    scale_fill_brewer(palette = "Dark2") +
+    coord_flip() +
+    theme_ipsum(base_family = "Hind") +
+    labs(x = NULL, y = NULL, fill = NULL, 
+         title = title, subtitle = "This includes all data used as input to or output of your research.") +
+    theme(legend.position = "top", plot.title.position = "plot")
+  
+  
+  ggsave(out_path, p, width = 9, height = 6)
+  
+}
+
+create_data_per_year_cat <- function(data, labels, out_path) {
+  pdata <- data %>% 
+    select(DQ02, D06) %>% 
+    mutate(DQ02 = case_when(
+      str_detect(DQ02, "99 GB") ~ "< 500 GB",
+      TRUE ~ ">= 500 GB"
+    )) %>% 
+    make_proportion(DQ02, D06, order_string = "<", .drop_na = T) %>% 
+    # mutate(DQ02 = factor(DQ02, levels = data_size_per_year)) %>% 
+    filter(!is.na(D06))
+  
+  title <- "How much data do you handle in the course of your research,\non average, per year?"
+  
+  p <- pdata %>% 
+    ggplot(aes(fct_reorder(str_wrap(D06, 40), order), prop, fill = DQ02)) +
+    geom_chicklet(width = .7) +
+    scale_y_continuous(labels = percent) +
+    scale_fill_brewer(palette = "Dark2") +
+    coord_flip() +
+    theme_ipsum(base_family = "Hind") +
+    labs(x = NULL, y = NULL, fill = NULL, 
+         title = title) +
+    theme(legend.position = "top", plot.title.position = "plot")
+  
+  
+  ggsave(out_path, p, width = 9, height = 6)
+  
+}
 
 
