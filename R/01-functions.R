@@ -335,17 +335,17 @@ create_data_per_year_cat <- function(data, labels, out_path) {
   
 }
 
-create_data_reuse <- function(data, labels, out_path) {
+create_data_reuse <- function(data, labels, by, out_path) {
   pdata <- data %>% 
-    select(DHRP03b_SQ003_, D06) %>% 
-    make_proportion(DHRP03b_SQ003_, D06, order_string = "Always|Most|Some", .drop_na = T) %>% 
+    select(DHRP03b_SQ003_, {{by}}) %>% 
+    make_proportion(DHRP03b_SQ003_, {{by}}, order_string = "Always|Most|Some", .drop_na = T) %>% 
     mutate(DHRP03b_SQ003_ = factor(DHRP03b_SQ003_, levels = propensity)) %>%
-    filter(!is.na(D06))
+    filter(!is.na({{by}}))
   
   title <- "During a project, how frequently do you/does your group\nreuse data from third parties?"
   
   p <- pdata %>% 
-    ggplot(aes(fct_reorder(str_wrap(D06, 40), order), prop, fill = DHRP03b_SQ003_)) +
+    ggplot(aes(fct_reorder(str_wrap({{by}}, 40), order), prop, fill = DHRP03b_SQ003_)) +
     geom_chicklet(width = .7) +
     scale_y_continuous(labels = percent) +
     scale_fill_brewer(palette = "Dark2") +
@@ -360,12 +360,12 @@ create_data_reuse <- function(data, labels, out_path) {
   
 }
 
-create_data_reuse2 <- function(data, labels, out_path) {
+create_data_reuse2 <- function(data, labels, by, out_path) {
   pdata <- data %>% 
     pivot_longer(cols = starts_with("DHRP03c"),
                  names_to = "var", values_to = "val") %>% 
-    select(var, val, D06) %>% 
-    make_proportion(val, D06, var, order_string = "Alwa|Most", .drop_na = T) %>% 
+    select(var, val, {{by}}) %>% 
+    make_proportion(val, {{by}}, var, order_string = "Alwa|Most", .drop_na = T) %>% 
     left_join(labels, by = "var") %>% 
     mutate(val = factor(val, levels = propensity))
     
@@ -373,7 +373,7 @@ create_data_reuse2 <- function(data, labels, out_path) {
   title <- unique(pdata$question) %>% str_wrap()
   
   p <- pdata %>% 
-    ggplot(aes(tidytext::reorder_within(str_wrap(D06, 40), order, label), prop, 
+    ggplot(aes(tidytext::reorder_within(str_wrap({{by}}, 40), order, label), prop, 
                fill = val)) +
     geom_chicklet(width = .7) +
     scale_y_continuous(labels = percent) +
