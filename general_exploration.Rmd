@@ -1,0 +1,30 @@
+---
+title: "General Exploration"
+author: "Thomas Klebel"
+date: "11/4/2019"
+output: html_document
+---
+
+```{r}
+library(drake)
+library(visdat)
+
+loadd(data)
+```
+
+
+
+```{r, fig.width=10, fig.height=10}
+data %>% 
+  select_if(~sum(is.na(.x)) > 10)  %>% 
+  vis_miss(cluster = T, sort_miss = T) +
+  theme(plot.margin = margin(r = 50))
+```
+
+```{r, fig.width=10, fig.height=10}
+data %>% 
+  select_if(~sum(is.na(.)) > 10) %>% 
+  select_if(!str_detect(names(.), "other|comment")) %>% 
+  vis_miss(cluster = T, sort_miss = T) +
+  theme(plot.margin = margin(r = 50))
+```
