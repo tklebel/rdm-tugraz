@@ -30,6 +30,11 @@ data_sizes_production <- c("< 1 MB", "Up to 99 MB", "100 MB - 999 MB",
 data_size_per_year <- c("0 - 99 GB", "100 GB - 499 GB", "500 GB - 900 GB", 
                    "1 TB - 5 TB", "> 5 TB")
 
+propensity <- c(
+  "Always, or almost always", "Most of the time", "Sometimes",
+  "Rarely", "Never, or almost never", "Do not know/cannot answer"
+)
+
 make_univ_fig <- function(data, labels, var, sort_string, out_path, 
                           .drop_na = FALSE) {
     pdata <- data %>% 
@@ -334,10 +339,7 @@ create_data_reuse <- function(data, labels, out_path) {
   pdata <- data %>% 
     select(DHRP03b_SQ003_, D06) %>% 
     make_proportion(DHRP03b_SQ003_, D06, order_string = "Always|Most|Some", .drop_na = T) %>% 
-    mutate(DHRP03b_SQ003_ = factor(DHRP03b_SQ003_, levels = c(
-      "Always, or almost always", "Most of the time", "Sometimes",
-      "Rarely", "Never, or almost never", "Do not know/cannot answer"
-    ))) %>%
+    mutate(DHRP03b_SQ003_ = factor(DHRP03b_SQ003_, levels = propensity)) %>%
     filter(!is.na(D06))
   
   title <- "During a project, how frequently do you/does your group\nreuse data from third parties?"
