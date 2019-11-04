@@ -39,5 +39,6 @@ plan <- drake_plan(
   data_size = create_data_size(data, labels, file_out("figs/final/data_size.png")),
   data_per_year = create_data_per_year(data, labels, file_out("figs/final/data_per_year.png")),
   data_per_year_cat = create_data_per_year_cat(data, labels, file_out("figs/final/data_per_year_cat.png")),
-  data_reuse = create_data_reuse(data, labels, file_out("figs/final/data_reuse.png"))
+  data_reuse = create_data_reuse(data, labels, file_out("figs/final/data_reuse.png")),
+  data_reuse2 = create_data_reuse2(data, labels, file_out("figs/final/data_reuse2.png"))
 )

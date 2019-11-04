@@ -360,4 +360,36 @@ create_data_reuse <- function(data, labels, out_path) {
   
 }
 
+create_data_reuse2 <- function(data, labels, out_path) {
+  pdata <- data %>% 
+    pivot_longer(cols = starts_with("DHRP03c"),
+                 names_to = "var", values_to = "val") %>% 
+    select(var, val, D06) %>% 
+    make_proportion(val, D06, var, order_string = "Alwa|Most", .drop_na = T) %>% 
+    left_join(labels, by = "var") %>% 
+    mutate(val = factor(val, levels = propensity))
+    
+  
+  title <- unique(pdata$question) %>% str_wrap()
+  
+  p <- pdata %>% 
+    ggplot(aes(tidytext::reorder_within(str_wrap(D06, 40), order, label), prop, 
+               fill = val)) +
+    geom_chicklet(width = .7) +
+    scale_y_continuous(labels = percent) +
+    tidytext::scale_x_reordered() + 
+    scale_fill_brewer(palette = "Dark2") +
+    facet_wrap(vars(label), ncol = 1, scales = "free_y") +
+    coord_flip() +
+    theme_ipsum(base_family = "Hind") +
+    labs(x = NULL, y = NULL, fill = NULL, 
+         title = title,
+         caption = "Faculties ordered by 'Always, or almost always' & 'Most of the time'") +
+    theme(legend.position = "top", plot.title.position = "plot")
+  
+  
+  ggsave(out_path, p, width = 12, height = 16)
+  
+}
+
 
