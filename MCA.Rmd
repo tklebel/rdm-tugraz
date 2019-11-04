@@ -10,12 +10,14 @@ library(drake)
 library(ca)
 
 loadd(data)
+loadd(labels)
 ```
 
 
 ```{r}
 data %>% 
   select(DHRP03b_SQ003_, contains("DHRP06")) %>% 
-  ca::mjca()
+  ca::mjca() %>% 
+  plot_ca()
 ```
 

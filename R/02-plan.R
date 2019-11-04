@@ -34,6 +34,11 @@ plan <- drake_plan(
     output_file = file_out("general_exploration.html"),
     quiet = TRUE
   ),
+  report_mca = rmarkdown::render(
+    knitr_in("MCA.Rmd"),
+    output_file = file_out("MCA.html"),
+    quiet = TRUE
+  ),
   rda_fig = create_rda_fig(data, labels, file_out("figs/final/data_sharing.png")),
   data_sharing_cat = create_data_sharing_cat(data, labels, file_out("figs/final/data_sharing_cat.png")),
   descriptive_graphs = target(
