@@ -330,4 +330,32 @@ create_data_per_year_cat <- function(data, labels, out_path) {
   
 }
 
+create_data_reuse <- function(data, labels, out_path) {
+  pdata <- data %>% 
+    select(DHRP03b_SQ003_, D06) %>% 
+    make_proportion(DHRP03b_SQ003_, D06, order_string = "Always|Most|Some", .drop_na = T) %>% 
+    mutate(DHRP03b_SQ003_ = factor(DHRP03b_SQ003_, levels = c(
+      "Always, or almost always", "Most of the time", "Sometimes",
+      "Rarely", "Never, or almost never", "Do not know/cannot answer"
+    ))) %>%
+    filter(!is.na(D06))
+  
+  title <- "During a project, how frequently do you/does your group\nreuse data from third parties?"
+  
+  p <- pdata %>% 
+    ggplot(aes(fct_reorder(str_wrap(D06, 40), order), prop, fill = DHRP03b_SQ003_)) +
+    geom_chicklet(width = .7) +
+    scale_y_continuous(labels = percent) +
+    scale_fill_brewer(palette = "Dark2") +
+    coord_flip() +
+    theme_ipsum(base_family = "Hind") +
+    labs(x = NULL, y = NULL, fill = NULL, 
+         title = title) +
+    theme(legend.position = "top", plot.title.position = "plot")
+  
+  
+  ggsave(out_path, p, width = 9, height = 6)
+  
+}
+
 
