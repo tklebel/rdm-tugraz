@@ -137,7 +137,8 @@ make_labels <- function(labels) {
     pivot_longer(everything(), names_to = c("var", "question", "label"), 
                  names_pattern = "(.*)_(.*)\\s\\[(.*)\\]") %>% 
     mutate(var = str_replace_all(var,  "\\[|\\]", "_")) %>% 
-    select(-value)
+    select(-value) %>% 
+    drop_na()
 }
 
 create_rda_fig <- function(data, labels, out_path, width = 10, height = 7) {

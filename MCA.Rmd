@@ -1,0 +1,21 @@
+---
+title: "MCA"
+author: "Thomas Klebel"
+date: "11/4/2019"
+output: html_document
+---
+
+```{r}
+library(drake)
+library(ca)
+
+loadd(data)
+```
+
+
+```{r}
+data %>% 
+  select(DHRP03b_SQ003_, contains("DHRP06")) %>% 
+  ca::mjca()
+```
+
