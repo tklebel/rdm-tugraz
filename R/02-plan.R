@@ -24,7 +24,8 @@ plan <- drake_plan(
       seed = col_double()
     )),
   data = raw_data %>% 
-    clean_data(),
+    clean_data() %>% 
+    set_factors(),
   labels = make_labels(
     file_in("data/label_basis.csv")
   ),
@@ -39,6 +40,10 @@ plan <- drake_plan(
   data_size = create_data_size(data, labels, file_out("figs/final/data_size.png")),
   data_per_year = create_data_per_year(data, labels, file_out("figs/final/data_per_year.png")),
   data_per_year_cat = create_data_per_year_cat(data, labels, file_out("figs/final/data_per_year_cat.png")),
-  data_reuse = create_data_reuse(data, labels, D06, file_out("figs/final/data_reuse.png")),
-  data_reuse2 = create_data_reuse2(data, labels, D06, file_out("figs/final/data_reuse2.png"))
+  data_reuse_1a = create_data_reuse(data, labels, D06, out_path = file_out("figs/final/data_reuse_1a.png")),
+  data_reuse_2a = create_data_reuse2(data, labels, D06, out_path = file_out("figs/final/data_reuse_2a.png")),
+  data_reuse_1b = create_data_reuse(data, labels, DQ04, order_string = "", 
+                                    file_out("figs/final/data_reuse_1b.png")),
+  data_reuse_2b = create_data_reuse2(data, labels, DQ04, sort_y = FALSE, 
+                                     file_out("figs/final/data_reuse_2b.png"))
 )

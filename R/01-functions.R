@@ -35,6 +35,12 @@ propensity <- c(
   "Rarely", "Never, or almost never", "Do not know/cannot answer"
 )
 
+
+group_size <- c(
+  "Fewer than 5 people", paste(c("5-9", "10-19", "20-29"), "people"),
+  "30 or more people"
+)
+
 make_univ_fig <- function(data, labels, var, sort_string, out_path, 
                           .drop_na = FALSE) {
     pdata <- data %>% 
@@ -114,6 +120,13 @@ make_univ_fig <- function(data, labels, var, sort_string, out_path,
 clean_data <- function(raw_data) {
   raw_data %>% 
     set_names(., str_replace_all(names(.), "\\[|\\]", "_"))
+}
+
+set_factors <- function(data) {
+  data %>% 
+    mutate(DQ04 = factor(DQ04, levels = c(
+      "Fewer than 5 people", paste(c("5-9", "10-19", "20-29"), "people"),
+      "30 or more people")))
 }
 
 make_labels <- function(labels) {
@@ -335,11 +348,11 @@ create_data_per_year_cat <- function(data, labels, out_path) {
   
 }
 
-create_data_reuse <- function(data, labels, by, out_path) {
+create_data_reuse <- function(data, labels, by, order_string = "Alwa|Most|Some", out_path) {
   pdata <- data %>% 
     select(DHRP03b_SQ003_, {{by}}) %>% 
-    make_proportion(DHRP03b_SQ003_, {{by}}, order_string = "Always|Most|Some", .drop_na = T) %>% 
-    mutate(DHRP03b_SQ003_ = factor(DHRP03b_SQ003_, levels = propensity)) %>%
+    make_proportion(DHRP03b_SQ003_, {{by}}, order_string = order_string, .drop_na = F) %>% 
+    mutate(DHRP03b_SQ003_ = factor(DHRP03b_SQ003_, levels = propensity) %>% forcats::fct_explicit_na()) %>%
     filter(!is.na({{by}}))
   
   title <- "During a project, how frequently do you/does your group\nreuse data from third parties?"
@@ -352,7 +365,8 @@ create_data_reuse <- function(data, labels, by, out_path) {
     coord_flip() +
     theme_ipsum(base_family = "Hind") +
     labs(x = NULL, y = NULL, fill = NULL, 
-         title = title) +
+         title = title, 
+         caption = "Faculties ordered by 'Always, or almost always' & 'Most of the time' & 'Sometimes'") +
     theme(legend.position = "top", plot.title.position = "plot")
   
   
@@ -360,21 +374,33 @@ create_data_reuse <- function(data, labels, by, out_path) {
   
 }
 
-create_data_reuse2 <- function(data, labels, by, out_path) {
+create_data_reuse2 <- function(data, labels, by, sort_y = TRUE, out_path) {
   pdata <- data %>% 
     pivot_longer(cols = starts_with("DHRP03c"),
                  names_to = "var", values_to = "val") %>% 
     select(var, val, {{by}}) %>% 
-    make_proportion(val, {{by}}, var, order_string = "Alwa|Most", .drop_na = T) %>% 
+    make_proportion(val, {{by}}, var, order_string = "Alwa|Most", .drop_na = F) %>% 
     left_join(labels, by = "var") %>% 
-    mutate(val = factor(val, levels = propensity))
+    ungroup() %>% 
+    mutate(val = val %>% 
+             forcats::fct_explicit_na() %>% 
+             factor(levels = c(propensity, "(Missing)"))) %>% 
+    drop_na()
+    
     
   
   title <- unique(pdata$question) %>% str_wrap()
   
-  p <- pdata %>% 
-    ggplot(aes(tidytext::reorder_within(str_wrap({{by}}, 40), order, label), prop, 
-               fill = val)) +
+  if (sort_y) {
+    p <- pdata %>% 
+      ggplot(aes(tidytext::reorder_within(str_wrap({{by}}, 40), order, label), prop, 
+                 fill = val)) 
+  } else {
+    p <- pdata %>% 
+      ggplot(aes({{by}}, prop, fill = val)) 
+  }
+  
+  p <- p + 
     geom_chicklet(width = .7) +
     scale_y_continuous(labels = percent) +
     tidytext::scale_x_reordered() + 
@@ -384,7 +410,7 @@ create_data_reuse2 <- function(data, labels, by, out_path) {
     theme_ipsum(base_family = "Hind") +
     labs(x = NULL, y = NULL, fill = NULL, 
          title = title,
-         caption = "Faculties ordered by 'Always, or almost always' & 'Most of the time'") +
+         caption = "Y-axis ordered by 'Always, or almost always' & 'Most of the time'") +
     theme(legend.position = "top", plot.title.position = "plot")
   
   
