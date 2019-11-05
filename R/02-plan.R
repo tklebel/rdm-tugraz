@@ -55,5 +55,6 @@ plan <- drake_plan(
   data_reuse_1b = create_data_reuse(data, labels, DQ04, order_string = "", 
                                     file_out("figs/final/data_reuse_1b.png")),
   data_reuse_2b = create_data_reuse2(data, labels, DQ04, sort_y = FALSE, 
-                                     file_out("figs/final/data_reuse_2b.png"))
+                                     file_out("figs/final/data_reuse_2b.png")),
+  data_reuse_sharing = create_reuse_sharing(data, labels, out_path = file_out("figs/final/reuse_sharing.png"))
 )

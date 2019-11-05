@@ -419,4 +419,27 @@ create_data_reuse2 <- function(data, labels, by, sort_y = TRUE, out_path) {
   
 }
 
+create_reuse_sharing <- function(data, labels, lines = TRUE, out_path) {
+  pdata <- data %>% 
+    select(DHRP03b_SQ003_, contains("DHRP06"), D06) %>% 
+    mutate(id = seq_along(DHRP03b_SQ003_)) %>% 
+    tidyr::gather(var, val, -id, -D06) %>% 
+    left_join(labels, by = "var") %>% 
+    mutate(val_new = paste(label, "_", val),
+           val_new = str_replace(val_new, "...sharing research data", "sharing")) %>% 
+    select(id, var, val_new, D06) %>% 
+    pivot_wider(names_from = var, values_from = val_new) %>% 
+    select(-id) %>% 
+    filter_all(all_vars(!str_detect(., "NA|answer"))) %>% 
+    select(starts_with("DHR"), D06)
+  
+  p <- pdata %>% 
+    ca::mjca(supcol = 6) %>% 
+    plot_ca(lines = lines) +
+    labs(title = "Opinions on data sharing & data reuse")
+  
+  ggsave(out_path, p, width = 14, height = 10)
+  
+}
+
 

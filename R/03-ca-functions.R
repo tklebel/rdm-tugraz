@@ -2,7 +2,7 @@
 #'
 #' @export
 plot_ca <- function(object, font_size = 3, dimensions = c(1, 2),
-                    show.legend = F, map = "symmetric") {
+                    show.legend = F, map = "symmetric", lines = FALSE) {
   ca_class <- class(object)
   if (!identical(ca_class, "ca") & !identical(ca_class, "mjca")) {
     stop("Input object must be of type 'ca' or 'mjca'")
@@ -58,11 +58,12 @@ plot_ca <- function(object, font_size = 3, dimensions = c(1, 2),
       # catch case with no sup_vars
       ggplot(augmented_data$col_data, aes(x = x, y = y)) +
         plot_parts(font_size = font_size, x_label = x_label, y_label = y_label,
-                   show.legend = show.legend)
+                   show.legend = show.legend, lines = lines)
     } else {
       ggplot(augmented_data$col_data, aes(x = x, y = y, colour = sup_var)) +
         plot_parts(font_size = font_size, x_label = x_label, y_label = y_label,
-                   show.legend = show.legend)
+                   show.legend = show.legend, lines = lines, 
+                   data = augmented_data$col_data)
     }
   }
   
@@ -72,9 +73,8 @@ plot_ca <- function(object, font_size = 3, dimensions = c(1, 2),
 
 
 #' Parts for plotting ca
-plot_parts <- function(font_size = font_size, x_label = x_label,
-                       y_label = y_label, show.legend = show.legend) {
-  list(
+plot_parts <- function(font_size, x_label, y_label, show.legend, lines, data) {
+  part1 <- list(
     geom_point(show.legend = show.legend),
     ggrepel::geom_text_repel(aes(label = rowname), size = font_size, show.legend = F,
                              force = 2, max.iter = 5000),
@@ -87,6 +87,15 @@ plot_parts <- function(font_size = font_size, x_label = x_label,
     hrbrthemes::theme_ipsum(base_family = "Hind"),
     theme(legend.position = "bottom", legend.direction = "horizontal")
   )
+  
+  if (lines) {
+    c(list(geom_line(aes(group = group_var), show.legend = F, alpha = .4,
+           data = drop_na(data))),
+      part1
+    )
+  } else {
+    part1
+  }
 }
 
 #' Add rownames as column
@@ -130,7 +139,12 @@ extract_ca_data <- function(object, dimensions = c(1, 2),
                                 c("Initial Variables", "Supplementary Variables"))) %>%
       dplyr::select(rowname, sup_var) %>%
       full_join(col_data, by = "rowname") %>%
-      replace_na(list(sup_var = "Initial Variables"))
+      replace_na(list(sup_var = "Initial Variables")) %>% 
+      # find variables and create new var to identify them
+      mutate(group_var = str_extract(rowname, ".*?(?=\\s_\\s)"),
+             group_var = case_when(
+               str_detect(sup_var, "Suppl") ~ NA_character_,
+               TRUE ~ group_var))
     
     return(list(col_data = col_data))
     
