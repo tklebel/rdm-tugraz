@@ -353,7 +353,8 @@ create_data_reuse <- function(data, labels, by, order_string = "Alwa|Most|Some",
   pdata <- data %>% 
     select(DHRP03b_SQ003_, {{by}}) %>% 
     make_proportion(DHRP03b_SQ003_, {{by}}, order_string = order_string, .drop_na = F) %>% 
-    mutate(DHRP03b_SQ003_ = factor(DHRP03b_SQ003_, levels = propensity) %>% forcats::fct_explicit_na()) %>%
+    mutate(DHRP03b_SQ003_ = forcats::fct_explicit_na(DHRP03b_SQ003_) %>% 
+             factor(levels = c(propensity, "(Missing)"))) %>%
     filter(!is.na({{by}}))
   
   title <- "During a project, how frequently do you/does your group\nreuse data from third parties?"
