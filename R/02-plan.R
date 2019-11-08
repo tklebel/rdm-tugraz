@@ -52,7 +52,7 @@ plan <- drake_plan(
   data_per_year_cat = create_data_per_year_cat(data, labels, file_out("figs/final/data_per_year_cat.png")),
   data_reuse_1a = create_data_reuse(data, labels, D06, out_path = file_out("figs/final/data_reuse_1a.png")),
   data_reuse_2a = create_data_reuse2(data, labels, D06, out_path = file_out("figs/final/data_reuse_2a.png")),
-  data_reuse_1b = create_data_reuse(data, labels, DQ04, order_string = "", 
+  data_reuse_1b = create_data_reuse(data, labels, DQ04, order_string = "", wrap = F,
                                     file_out("figs/final/data_reuse_1b.png")),
   data_reuse_2b = create_data_reuse2(data, labels, DQ04, sort_y = FALSE, 
                                      file_out("figs/final/data_reuse_2b.png")),

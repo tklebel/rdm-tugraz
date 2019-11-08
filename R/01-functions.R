@@ -349,18 +349,35 @@ create_data_per_year_cat <- function(data, labels, out_path) {
   
 }
 
-create_data_reuse <- function(data, labels, by, order_string = "Alwa|Most|Some", out_path) {
+create_data_reuse <- function(data, labels, by, order_string = "Alwa|Most|Some", 
+                              wrap = T, out_path) {
   pdata <- data %>% 
     select(DHRP03b_SQ003_, {{by}}) %>% 
     make_proportion(DHRP03b_SQ003_, {{by}}, order_string = order_string, .drop_na = F) %>% 
     mutate(DHRP03b_SQ003_ = forcats::fct_explicit_na(DHRP03b_SQ003_) %>% 
              factor(levels = c(propensity, "(Missing)"))) %>%
-    filter(!is.na({{by}}))
+    filter(!is.na({{by}})) %>% 
+    ungroup()
+  
+  if (wrap) {
+    pdata <- pdata %>% 
+      mutate_at(vars({{by}}), str_wrap, 40)
+  }
+  
+  if (str_length(order_string) > 0) {
+    pdata <- pdata %>% 
+      mutate({{by}} := fct_reorder({{by}}, order))
+    
+    caption <- "Faculties ordered by 'Always, or almost always' & 'Most of the time' & 'Sometimes'"
+  } else {
+    caption <- NULL
+  }
+  
   
   title <- "During a project, how frequently do you/does your group\nreuse data from third parties?"
   
   p <- pdata %>% 
-    ggplot(aes(fct_reorder(str_wrap({{by}}, 40), order), prop, fill = DHRP03b_SQ003_)) +
+    ggplot(aes({{by}}, prop, fill = DHRP03b_SQ003_)) +
     geom_chicklet(width = .7) +
     scale_y_continuous(labels = percent) +
     scale_fill_brewer(palette = "Dark2") +
@@ -368,7 +385,7 @@ create_data_reuse <- function(data, labels, by, order_string = "Alwa|Most|Some",
     theme_ipsum(base_family = "Hind") +
     labs(x = NULL, y = NULL, fill = NULL, 
          title = title, 
-         caption = "Faculties ordered by 'Always, or almost always' & 'Most of the time' & 'Sometimes'") +
+         caption = caption) +
     theme(legend.position = "top", plot.title.position = "plot")
   
   
