@@ -398,7 +398,7 @@ create_data_reuse2 <- function(data, labels, by, sort_y = TRUE, out_path) {
     pivot_longer(cols = starts_with("DHRP03c"),
                  names_to = "var", values_to = "val") %>% 
     select(var, val, {{by}}) %>% 
-    make_proportion(val, {{by}}, var, order_string = "Alwa|Most", .drop_na = F) %>% 
+    make_proportion(val, {{by}}, var, order_string = "Alwa|Most|Some", .drop_na = F) %>% 
     left_join(labels, by = "var") %>% 
     ungroup() %>% 
     mutate(val = val %>% 
@@ -414,9 +414,13 @@ create_data_reuse2 <- function(data, labels, by, sort_y = TRUE, out_path) {
     p <- pdata %>% 
       ggplot(aes(tidytext::reorder_within(str_wrap({{by}}, 40), order, label), prop, 
                  fill = val)) 
+    
+    caption <- "Y-axis ordered by 'Always, or almost always' & 'Most of the time' & 'Sometimes'"
   } else {
     p <- pdata %>% 
       ggplot(aes({{by}}, prop, fill = val)) 
+    
+    caption <- NULL
   }
   
   p <- p + 
@@ -429,7 +433,7 @@ create_data_reuse2 <- function(data, labels, by, sort_y = TRUE, out_path) {
     theme_ipsum(base_family = "Hind") +
     labs(x = NULL, y = NULL, fill = NULL, 
          title = title,
-         caption = "Y-axis ordered by 'Always, or almost always' & 'Most of the time'") +
+         caption = caption) +
     theme(legend.position = "top", plot.title.position = "plot")
   
   
