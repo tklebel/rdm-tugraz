@@ -479,3 +479,29 @@ create_reuse_sharing <- function(data, labels, lines = TRUE, out_path) {
 }
 
 
+create_amount_storage <- function(data, labels, lines = TRUE, out_path) {
+  pdata <- data %>% 
+    select(DQ01, DQ02, contains("DQ03"), D06) %>% 
+    mutate(id = seq_along(DQ01)) %>% 
+    tidyr::gather(var, val, -id, -D06) %>% 
+    left_join(labels, by = "var") %>% 
+    mutate(val_new = case_when(
+             str_detect(question, "How big") ~ paste("Data size", "_", val),
+             str_detect(question, "How much") ~ paste("Data produced per year", "_", val),
+             TRUE ~ paste(label, "_", val)
+           )) %>% 
+    select(id, var, val_new, D06) %>% 
+    pivot_wider(names_from = var, values_from = val_new) %>% 
+    select(-id) %>% 
+    filter_all(all_vars(!str_detect(., "NA"))) %>% 
+    select(starts_with("DQ0"), D06) 
+  
+  p <- pdata %>% 
+    ca::mjca(supcol = 5) %>% 
+    plot_ca(lines = lines) +
+    labs(title = "Opinions on data production and storage")
+  
+  ggsave(out_path, p, width = 16, height = 10)
+  
+}
+
