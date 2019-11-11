@@ -146,7 +146,10 @@ make_labels <- function(labels) {
             regex = "(.*)\\s\\[(.*)\\]", remove = FALSE) %>% 
     mutate(question = coalesce(new, question)) %>% 
     mutate(var = str_replace_all(var,  "\\[|\\]", "_")) %>% 
-    select(-value, -new) 
+    select(-value, -new) %>% 
+    # clean a few labels
+    mutate(label = str_replace(label, "&lt;", "<"),
+           label = str_replace(label, "&gt;", ">"))
 }
 
 create_rda_fig <- function(data, labels, out_path, width = 10, height = 7) {
