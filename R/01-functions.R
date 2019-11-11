@@ -134,11 +134,19 @@ make_labels <- function(labels) {
            col_types = cols(
              .default = col_character()
            )) %>% 
-    pivot_longer(everything(), names_to = c("var", "question", "label"), 
-                 names_pattern = "(.*)_(.*)\\s\\[(.*)\\]") %>% 
+    # using pivot_longer with the following spec does not work, since unmatched
+    # patterns lead to NA. Maybe a better regex could solve this. for now, 
+    # explicitely using extract fixes the problem.
+    #   # pivot_longer(everything(), names_to = c("var", "question", "label"), 
+    #                  names_pattern = "(.*)_(.*)\\s\\[(.*)\\]") %>% 
+    pivot_longer(everything()) %>% 
+    extract(name, into = c("var", "question"),
+            regex = "(.*)_(.*)") %>% 
+    extract(question, into = c("new", "label"),
+            regex = "(.*)\\s\\[(.*)\\]", remove = FALSE) %>% 
+    mutate(question = coalesce(new, question)) %>% 
     mutate(var = str_replace_all(var,  "\\[|\\]", "_")) %>% 
-    select(-value) %>% 
-    drop_na()
+    select(-value, -new) 
 }
 
 create_rda_fig <- function(data, labels, out_path, width = 10, height = 7) {
