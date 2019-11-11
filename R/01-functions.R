@@ -395,6 +395,9 @@ create_data_reuse <- function(data, labels, by, order_string = "Alwa|Most|Some",
 
 create_data_reuse2 <- function(data, labels, by, sort_y = TRUE, out_path) {
   pdata <- data %>% 
+    filter(!DHRP03b_SQ003_ %in% c("Never, or almost never", 
+                                  "Do not know/cannot answer",
+                                  NA_character_)) %>% 
     pivot_longer(cols = starts_with("DHRP03c"),
                  names_to = "var", values_to = "val") %>% 
     select(var, val, {{by}}) %>% 
