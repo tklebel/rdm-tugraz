@@ -505,3 +505,82 @@ create_amount_storage <- function(data, labels, lines = TRUE, out_path) {
   
 }
 
+create_data_amount2 <- function(data, labels, by, sort_y = TRUE, out_path) {
+  pdata <- data %>% 
+    pivot_longer(cols = starts_with("DQ03"),
+                 names_to = "var", values_to = "val") %>% 
+    select(var, val, {{by}}) %>% 
+    make_proportion(val, {{by}}, var, order_string = "GB", .drop_na = F) %>% 
+    left_join(labels, by = "var") %>% 
+    ungroup() %>% 
+    mutate(val = val %>% 
+             forcats::fct_explicit_na() %>% 
+             factor(levels = c(data_sizes_storage, "(Missing)"))) %>% 
+    drop_na()
+  
+  
+  
+  title <- unique(pdata$question) %>% str_wrap()
+  
+  if (sort_y) {
+    p <- pdata %>% 
+      ggplot(aes(tidytext::reorder_within(str_wrap({{by}}, 40), order, label), prop, 
+                 fill = val)) 
+    
+    caption <- "Y-axis ordered by GB vs. TB"
+  } else {
+    p <- pdata %>% 
+      ggplot(aes({{by}}, prop, fill = val)) 
+    
+    caption <- NULL
+  }
+  
+  p <- p + 
+    geom_chicklet(width = .7) +
+    scale_y_continuous(labels = percent) +
+    tidytext::scale_x_reordered() + 
+    scale_fill_brewer(palette = "Dark2") +
+    facet_wrap(vars(label), ncol = 1, scales = "free_y") +
+    coord_flip() +
+    theme_ipsum(base_family = "Hind") +
+    labs(x = NULL, y = NULL, fill = NULL, 
+         title = title,
+         caption = caption) +
+    theme(legend.position = "top", plot.title.position = "plot")
+  
+  
+  ggsave(out_path, p, width = 12, height = 10)
+  
+}
+
+
+create_data_amount <- function(data, labels, out_path) {
+  base_data <- data %>% 
+    pivot_longer(cols = starts_with("DQ03"),
+                 names_to = "var", values_to = "val") %>% 
+    select(var, val) %>% 
+    left_join(labels, by = "var") %>% 
+    mutate(label = str_wrap(label, 25),
+           val = fct_explicit_na(val)) %>% 
+    # # dropping missing values is ok, since there are few of them and they are
+    # # almost equally distributed among the three questions
+    # drop_na(val) %>% 
+    mutate(val = factor(val, levels = c(data_sizes_storage, "(Missing)")))
+  
+  pdata <- base_data %>% 
+    make_proportion(val, label, order_string = "GB")
+  
+  
+  p <- pdata %>% 
+    ggplot(aes(fct_reorder(label, order), prop, fill = val)) +
+    geom_chicklet(width = .6) +
+    scale_y_continuous(labels = percent) +
+    scale_fill_brewer(palette = "Dark2") +
+    coord_flip() +
+    theme_ipsum(base_family = "Hind") +
+    labs(x = NULL, y = NULL, fill = NULL, 
+         title = str_wrap("Sometimes, data need to be stored only for the duration of a project, sometimes data need to be kept longer. Of the data you generate annually, how much would you say requires...")) +
+    theme(legend.position = "top", plot.title.position = "plot")
+  
+  ggsave(out_path, p, width = 10, height = 5)
+}
