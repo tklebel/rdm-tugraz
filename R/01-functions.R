@@ -584,3 +584,31 @@ create_data_amount <- function(data, labels, out_path) {
   
   ggsave(out_path, p, width = 10, height = 5)
 }
+
+create_sample_overview <- function(data, out_path) {
+  
+  total_sample <- tribble(
+    ~D06,                                                                ~n_total,
+    "Architecture",                                                        116,
+    "Civil Engineering Sciences",                                          200,
+    "Computer Science and Biomedical Engineering",                         287,
+    "Electrical and Information Engineering",                              244,
+    "Mathematics, Physics, and Geodesy",                                   219,
+    "Mechanical Engineering and Economic Sciences",                        392,
+    "Technical Chemistry, Chemical and Process Engineering, Biotechnology",298
+  )
+  
+  p <- data %>% 
+    count(D06) %>% 
+    drop_na() %>% 
+    left_join(total_sample, by = "D06") %>% 
+    mutate(prop = n/n_total) %>% 
+    ggplot(aes(fct_reorder(str_wrap(D06, 40), prop), prop)) +
+    geom_col(width = .7) +
+    coord_flip() +
+    scale_y_continuous(labels = scales::percent) +
+    labs(y = NULL, x = NULL, title = "Sample Coverage") +
+    theme_ipsum(base_family = "Hind") 
+  
+  ggsave(out_path, p, width = 7, height = 5)  
+}
