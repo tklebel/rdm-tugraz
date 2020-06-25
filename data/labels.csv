@@ -1,0 +1,110 @@
+var,question,label
+id,Response ID,NA
+submitdate,Date submitted,NA
+lastpage,Last page,NA
+startlanguage,Start language,NA
+seed,Seed,NA
+DT01_SQ001_,What kinds of data and other research outputs do you/does your group primarily generate during the course of your research? ,Audio Files
+DT01_SQ011_,What kinds of data and other research outputs do you/does your group primarily generate during the course of your research? ,Binary Datasets
+DT01_SQ002_,What kinds of data and other research outputs do you/does your group primarily generate during the course of your research? ,Computer Code or Scripts
+DT01_SQ005_,What kinds of data and other research outputs do you/does your group primarily generate during the course of your research? ,Computer-readable textual data
+DT01_SQ004_,What kinds of data and other research outputs do you/does your group primarily generate during the course of your research? ,Human-understandable textual files
+DT01_SQ003_,What kinds of data and other research outputs do you/does your group primarily generate during the course of your research? ,Images
+DT01_SQ006_,What kinds of data and other research outputs do you/does your group primarily generate during the course of your research? ,Movies
+DT01_SQ007_,What kinds of data and other research outputs do you/does your group primarily generate during the course of your research? ,Physical Objects (e.g. samples of any kind)
+DT01_SQ008_,What kinds of data and other research outputs do you/does your group primarily generate during the course of your research? ,Presentations (e.g. PowerPoint)
+DT01_SQ009_,What kinds of data and other research outputs do you/does your group primarily generate during the course of your research? ,Spreadsheets (e.g. Excel)
+DT01_SQ010_,What kinds of data and other research outputs do you/does your group primarily generate during the course of your research? ,"Publications (articles, book chapters, etc.)"
+DT01_other_,What kinds of data and other research outputs do you/does your group primarily generate during the course of your research? ,Other
+DT06_SQ001_,Which of the following do you or your group collect?,Data relevant only for internal use within my research team/organisation
+DT06_SQ002_,Which of the following do you or your group collect?,Data relevant for others to understand or reproduce our outputs
+DT06_SQ003_,Which of the following do you or your group collect?,Data potentially relevant for others to reuse for other purposes
+DT06_SQ004_,Which of the following do you or your group collect?,I/We do not collect any primary data
+DT06_other_,Which of the following do you or your group collect?,Other
+DT02_SQ001_,What kinds of data do you/does your group produce?,Observational Data
+DT02_SQ002_,What kinds of data do you/does your group produce?,Experimental Data
+DT02_SQ003_,What kinds of data do you/does your group produce?,Computational Data
+DT02_SQ006_,What kinds of data do you/does your group produce?,Simulated Data
+DT02_SQ005_,What kinds of data do you/does your group produce?,Measurement Data
+DT02_other_,What kinds of data do you/does your group produce?,Other
+DT03,What kinds of data formats do you/does your group typically use?,NA
+DT03_other_,What kinds of data formats do you/does your group typically use?,Other
+DT04a,"Do you/does your group generate/process data that could be considered sensitive (e.g. patient data, confidential data from industry projects)?",NA
+DT04b,"If you process sensitive data, please tell us which!",NA
+DT05a,Do you/does your group work with specimens of any kind?,NA
+DT05b,"If yes, which?",NA
+DQ01,How big are the data sets you work with in a typical research project?,NA
+DQ02,"How much data do you handle in the course of your research, on average, per year? This includes all data used as input to or output of your research.",NA
+DQ03_SQ001_,"Sometimes, data need to be stored only for the duration of a project, sometimes data need to be kept longer. Of the data you generate annually, how much would you say requires ...",... short-term storage (<3 years)
+DQ03_SQ002_,"Sometimes, data need to be stored only for the duration of a project, sometimes data need to be kept longer. Of the data you generate annually, how much would you say requires ...",... long-term storage (>3 years)
+DQ04,How many people are in your research group?,NA
+DHRP01,"How many research proposals have you contributed to (including ones that you are working on at the moment)? ""Research proposal"" covers everything from industry projects to FWF and Horizon2020 projects.",NA
+DHRP02_SQ001_,"When you work on a proposal, how frequently do you...","...create a data management plan at the proposal stage, at least in draft/outline form"
+DHRP02_SQ002_,"When you work on a proposal, how frequently do you...",...establish processes for dealing with sensitive/personal data
+DHRP02_SQ003_,"When you work on a proposal, how frequently do you...",...share a data management plan with research peers
+DHRP02_SQ004_,"When you work on a proposal, how frequently do you...",...allocate a separate budget and or human resources to data management/sharing
+DHRP07_SQ001_,Do you share data or other research outputs (e.g. code) with anyone beyond the research team?,"Yes, and most/all of the data produced is shared and made openly accessible"
+DHRP07_SQ001comment_,Do you share data or other research outputs (e.g. code) with anyone beyond the research team?,Comment
+DHRP07_SQ002_,Do you share data or other research outputs (e.g. code) with anyone beyond the research team?,"Yes, but only with collaborators within the project"
+DHRP07_SQ002comment_,Do you share data or other research outputs (e.g. code) with anyone beyond the research team?,Comment
+DHRP07_SQ003_,Do you share data or other research outputs (e.g. code) with anyone beyond the research team?,"Yes, but for certain data access is managed, i.e. to authorised users and with restrictions on potential reuse"
+DHRP07_SQ003comment_,Do you share data or other research outputs (e.g. code) with anyone beyond the research team?,Comment
+DHRP07_SQ004_,Do you share data or other research outputs (e.g. code) with anyone beyond the research team?,"Yes, but only on request"
+DHRP07_SQ004comment_,Do you share data or other research outputs (e.g. code) with anyone beyond the research team?,Comment
+DHRP07_SQ005_,Do you share data or other research outputs (e.g. code) with anyone beyond the research team?,"No, no data is shared with anyone beyond the research team"
+DHRP07_SQ005comment_,Do you share data or other research outputs (e.g. code) with anyone beyond the research team?,Comment
+DHRP07_SQ006_,Do you share data or other research outputs (e.g. code) with anyone beyond the research team?,Do not know/cannot answer
+DHRP07_SQ006comment_,Do you share data or other research outputs (e.g. code) with anyone beyond the research team?,Comment
+DHRP07_other_,Do you share data or other research outputs (e.g. code) with anyone beyond the research team?,Other
+DHRP07_othercomment_,Do you share data or other research outputs (e.g. code) with anyone beyond the research team?,Other comment
+DHRP06_SQ001_,"When thinking about your discipline, would you say that...",...sharing research data with peers is encouraged
+DHRP06_SQ002_,"When thinking about your discipline, would you say that...",...sharing research data is mandatory for most important journals
+DHRP06_SQ003_,"When thinking about your discipline, would you say that...",...sharing research data is not a priority
+DHRP06_SQ004_,"When thinking about your discipline, would you say that...",...sharing research data enables better research
+DHRP05_SQ001_,How frequently do you/does your group...,...share data to an institutional repository or data center (provided by TU Graz)
+DHRP05_SQ002_,How frequently do you/does your group...,"...share data to a non-institutional repository or data center (e.g. arXiv, GitHub)"
+DHRP05_SQ003_,How frequently do you/does your group...,...share data as a supplement or appendix to a publication
+DHRP05_SQ004_,How frequently do you/does your group...,...share data through a stand-alone data publication
+DHRP03a_SQ001_,Please name up to three non-institutional repositories you have used to store your data!,Service/Platform 1
+DHRP03a_SQ002_,Please name up to three non-institutional repositories you have used to store your data!,Service/Platform 2
+DHRP03a_SQ003_,Please name up to three non-institutional repositories you have used to store your data!,Service/Platform 3
+DHRP03b_SQ001_,"During a project, how frequently do you/does your group...",...update a data management plan to reflect changes in the project
+DHRP03b_SQ002_,"During a project, how frequently do you/does your group...","...provide training to team members on Research Data Management, Sharing and Reuse"
+DHRP03b_SQ003_,"During a project, how frequently do you/does your group...",...reuse data from third parties
+DHRP03c_SQ001_,"When re-using third-party data, these are usually obtained through...",...direct contact with data producers
+DHRP03c_SQ002_,"When re-using third-party data, these are usually obtained through...",...supplementary files linked to publications
+DHRP03c_SQ003_,"When re-using third-party data, these are usually obtained through...",...data repositories or similar platforms
+DHRP04_SQ001_,"The next question concerns standard processes in place for storing research data in the short term (for the duration of a project, &lt;3 years). How frequently do you/does your group...",...store data on a local hard-drive during a project
+DHRP04_SQ002_,"The next question concerns standard processes in place for storing research data in the short term (for the duration of a project, &lt;3 years). How frequently do you/does your group...",...store data in institutional servers during a project
+DHRP04_SQ003_,"The next question concerns standard processes in place for storing research data in the short term (for the duration of a project, &lt;3 years). How frequently do you/does your group...",...store data on cloud services provided by TU Graz during a project
+DHRP04_SQ004_,"The next question concerns standard processes in place for storing research data in the short term (for the duration of a project, &lt;3 years). How frequently do you/does your group...",...store data on cloud services provided by a third party during a project
+ORDM01,To what extent do you agree with the following statement: I have already experienced obstacles limiting my own or my team's abilities to manage and share the data generated in our research?,NA
+ORDM02_SQ001_,To what extent do you see the following as obstacles to research data management and sharing?,Dealing with data protection for personal data
+ORDM02_SQ002_,To what extent do you see the following as obstacles to research data management and sharing?,Dealing with data confidentiality for commercially-sensitive data
+ORDM02_SQ003_,To what extent do you see the following as obstacles to research data management and sharing?,"Dealing with security issues relating to data from sensitive research (e.g. terrorism, policing, defence industry)"
+ORDM02_SQ016_,To what extent do you see the following as obstacles to research data management and sharing?,Data security/information security
+ORDM02_SQ004_,To what extent do you see the following as obstacles to research data management and sharing?,"Legal restrictions (e.g. copyright law, patents, trademarks)"
+ORDM02_SQ005_,To what extent do you see the following as obstacles to research data management and sharing?,Financial costs of research data management and sharing (e.g. buying additional storage space)
+ORDM02_SQ006_,To what extent do you see the following as obstacles to research data management and sharing?,Lack of skills to manage and share data
+ORDM02_SQ007_,To what extent do you see the following as obstacles to research data management and sharing?,Increased time and effort required
+ORDM02_SQ008_,To what extent do you see the following as obstacles to research data management and sharing?,Lack of recognition given to research data management and sharing activities in my organisation
+ORDM02_SQ009_,To what extent do you see the following as obstacles to research data management and sharing?,Sharing data does not increase the visibility and impact of my research
+ORDM02_SQ010_,To what extent do you see the following as obstacles to research data management and sharing?,Risk of misinterpretation of data
+ORDM02_SQ011_,To what extent do you see the following as obstacles to research data management and sharing?,Risk of falsification of data
+ORDM02_SQ012_,To what extent do you see the following as obstacles to research data management and sharing?,Economic competitiveness/undesired commercial use
+ORDM02_SQ013_,To what extent do you see the following as obstacles to research data management and sharing?,Lack of institutional guidelines for research data management and sharing
+ORDM02_SQ014_,To what extent do you see the following as obstacles to research data management and sharing?,Missing data standards and established processes
+ORDM02_SQ015_,To what extent do you see the following as obstacles to research data management and sharing?,Lack of knowledge about data repositories or data centers where data could be stored
+ORDM03,Please specify any other obstacles to Research Data Management and sharing that you might experience!,NA
+D03,Please indicate your highest completed degree!,NA
+D03_other_,Please indicate your highest completed degree!,Other
+D06,Please indicate your faculty!,NA
+D02_SQ001_,Please indicate your role in your research group/at your department!,Full Professor
+D02_SQ002_,Please indicate your role in your research group/at your department!,Associate Professor
+D02_SQ008_,Please indicate your role in your research group/at your department!,Assistant Professor
+D02_SQ003_,Please indicate your role in your research group/at your department!,Lecturer
+D02_SQ004_,Please indicate your role in your research group/at your department!,PostDoc
+D02_SQ005_,Please indicate your role in your research group/at your department!,Researcher
+D02_SQ006_,Please indicate your role in your research group/at your department!,PhD-Candidate
+D02_SQ007_,Please indicate your role in your research group/at your department!,Student
+D02_other_,Please indicate your role in your research group/at your department!,Other

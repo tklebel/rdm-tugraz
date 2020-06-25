@@ -27,7 +27,8 @@ plan <- drake_plan(
     clean_data() %>% 
     set_factors(),
   labels = make_labels(
-    file_in("data/label_basis.csv")
+    file_in("data/label_basis.csv"),
+    file_out("data/labels.csv")
   ),
   report = rmarkdown::render(
     knitr_in("general_exploration.Rmd"),
@@ -60,5 +61,6 @@ plan <- drake_plan(
   data_amount_storage = create_amount_storage(data, labels, out_path = file_out("figs/final/amount_storage.png")),
   data_amount = create_data_amount(data, labels, out_path = file_out("figs/final/data_amount.png")),
   data_amount2 = create_data_amount2(data, labels, D06, out_path = file_out("figs/final/data_amount2.png")),
-  sample_overview = create_sample_overview(data, out_path = file_out("figs/final/sample_coverage.png"))
+  sample_overview = create_sample_overview(data, out_path = file_out("figs/final/sample_coverage.png")),
+  data_sharing_faculty = m_data_sharing_faculty(data, out_path = file_out("figs/final/data_sharing_faculty.png"))
 )

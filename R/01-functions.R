@@ -35,6 +35,11 @@ propensity <- c(
   "Rarely", "Never, or almost never", "Do not know/cannot answer"
 )
 
+agreement <- c(
+  "Completely agree", "Tend to agree", "Tend to disagree", "Completely disagree",
+  "Don't know/Cannot answer"
+)
+
 
 group_size <- c(
   "Fewer than 5 people", paste(c("5-9", "10-19", "20-29"), "people"),
@@ -129,7 +134,7 @@ set_factors <- function(data) {
       "30 or more people")))
 }
 
-make_labels <- function(labels) {
+make_labels <- function(labels, out_path) {
   read_csv(labels, n_max = 1,
            col_types = cols(
              .default = col_character()
@@ -149,7 +154,8 @@ make_labels <- function(labels) {
     select(-value, -new) %>% 
     # clean a few labels
     mutate(label = str_replace(label, "&lt;", "<"),
-           label = str_replace(label, "&gt;", ">"))
+           label = str_replace(label, "&gt;", ">")) %>% 
+    write_csv(out_path)
 }
 
 create_rda_fig <- function(data, labels, out_path, width = 10, height = 7) {
@@ -640,5 +646,36 @@ create_sample_overview <- function(data, out_path) {
   
   ggsave(out_path, p_final, width = 9, height = 5)  
 }
+
+
+m_data_sharing_faculty <-  function(data, out_path) {
+  
+  pdata <- data %>% 
+    select(DHRP06_SQ001_, D06) %>% 
+    make_proportion(DHRP06_SQ001_, D06, order_string = "\\sagree", .drop_na = T) %>% 
+    mutate(DHRP06_SQ001_ = factor(DHRP06_SQ001_, levels = agreement)) %>% 
+    filter(!is.na(D06))
+  
+  title <- "Is data sharing with peers encouraged?"
+  
+  p <- pdata %>% 
+    ggplot(aes(fct_reorder(str_wrap(D06, 40), order), prop, 
+               fill = DHRP06_SQ001_)) +
+    geom_chicklet(width = .7) +
+    scale_y_continuous(labels = percent) +
+    scale_fill_brewer(palette = "Dark2") +
+    coord_flip() +
+    theme_ipsum(base_family = "Hind") +
+    labs(x = NULL, y = NULL, fill = NULL, 
+         title = title) +
+    theme(legend.position = "top", plot.title.position = "plot") +
+    guides(fill = guide_legend(nrow = 2, byrow = T))
+  
+  
+  ggsave(out_path, p, width = 9, height = 6)
+}
+
+
+
 
 
