@@ -676,6 +676,34 @@ m_data_sharing_faculty <-  function(data, out_path) {
 }
 
 
+m_sharing_time <- function(data, out_path) {
+  
+  pdata <- data %>% 
+    select(DHRP06_SQ004_, ORDM02_SQ007_) %>% 
+    make_proportion(ORDM02_SQ007_, DHRP06_SQ004_, order_string = "", .drop_na = T) %>% 
+    mutate(ORDM02_SQ007_ = factor(ORDM02_SQ007_)) %>% 
+    filter(!is.na(DHRP06_SQ004_))
+  
+  title <- "Sharing enables better research/time is an obstacle to RDM"
+  
+  p <- pdata %>% 
+    ggplot(aes(fct_reorder(str_wrap(DHRP06_SQ004_, 40), order), prop, 
+               fill = ORDM02_SQ007_)) +
+    geom_chicklet(width = .7) +
+    scale_y_continuous(labels = percent) +
+    scale_fill_brewer(palette = "Dark2") +
+    coord_flip() +
+    theme_ipsum(base_family = "Hind") +
+    labs(x = NULL, y = NULL, fill = NULL, 
+         title = title) +
+    theme(legend.position = "top", plot.title.position = "plot") +
+    guides(fill = guide_legend(nrow = 2, byrow = T))
+  
+  
+  ggsave(out_path, p, width = 9, height = 6)
+}
+
+
 
 
 
