@@ -586,6 +586,25 @@ create_data_amount <- function(data, labels, out_path) {
 }
 
 create_sample_overview <- function(data, out_path) {
+  nudge_y <- .05
+  
+  pdata <- data %>% 
+    count(D06) %>% 
+    drop_na() %>% 
+    mutate(prop = n/sum(n),
+           label = glue::glue("{n} ({scales::percent(prop, accuracy = .1)})"))
+  
+  p1 <- pdata %>% 
+    ggplot(aes(fct_reorder(str_wrap(D06, 40), prop), prop)) +
+    geom_lollipop() +
+    coord_flip(clip = "off") +
+    geom_text(aes(label = label), nudge_y = nudge_y) +
+    scale_y_continuous(labels = function(x) scales::percent(x, accuracy = 1),
+                       breaks = c(0, .1, .2)) +
+    labs(x = NULL, y = "# of respondents (% of total sample)") +
+    theme_ipsum(base_family = "Hind", grid = "X") 
+  
+  
   
   total_sample <- tribble(
     ~D06,                                                                ~n_total,
@@ -598,17 +617,28 @@ create_sample_overview <- function(data, out_path) {
     "Technical Chemistry, Chemical and Process Engineering, Biotechnology",298
   )
   
-  p <- data %>% 
+  pdata2 <- data %>% 
     count(D06) %>% 
     drop_na() %>% 
     left_join(total_sample, by = "D06") %>% 
-    mutate(prop = n/n_total) %>% 
-    ggplot(aes(fct_reorder(str_wrap(D06, 40), prop), prop)) +
-    geom_col(width = .7) +
-    coord_flip() +
-    scale_y_continuous(labels = scales::percent) +
-    labs(y = NULL, x = NULL, title = "Sample Coverage") +
-    theme_ipsum(base_family = "Hind") 
+    mutate(prop = n/n_total,
+           label = glue::glue("{scales::percent(prop, accuracy = .1)}"))
   
-  ggsave(out_path, p, width = 7, height = 5)  
+  
+  p2 <- pdata2 %>% 
+    ggplot(aes(fct_reorder(str_wrap(D06, 40), pdata$prop), prop)) +
+    geom_lollipop() +
+    coord_flip(clip = "off") +
+    geom_text(aes(label = label), nudge_y = nudge_y) +
+    scale_y_continuous(labels = scales::percent) +
+    labs(x = NULL, y = "Response rate (% of faculty)") +
+    theme_ipsum(base_family = "Hind", grid = "X") +
+    theme(axis.text.y = element_blank())
+  
+  p_final <- p1 + p2 + plot_annotation(tag_levels = "A") +
+    plot_layout(widths = c(1.5, 1))
+  
+  ggsave(out_path, p_final, width = 9, height = 5)  
 }
+
+
