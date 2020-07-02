@@ -289,6 +289,7 @@ create_data_type2 <- function(data, labels, out_path) {
 create_data_size <- function(data, labels, out_path) {
   pdata <- data %>% 
     select(DQ01, D06) %>% 
+    filter(D06 != "Architecture") %>% 
     make_proportion(DQ01, D06, order_string = "MB", .drop_na = F) %>% 
     mutate(DQ01 = factor(DQ01, levels = data_sizes_production)) %>% 
     filter(!is.na(D06))
@@ -307,7 +308,7 @@ create_data_size <- function(data, labels, out_path) {
     theme(legend.position = "top", plot.title.position = "plot")
   
   
-  ggsave(out_path, p, width = 9, height = 6)
+  ggsave(out_path, p, width = 9, height = 5)
   
 }
 
@@ -315,6 +316,7 @@ create_data_size <- function(data, labels, out_path) {
 create_data_per_year <- function(data, labels, out_path) {
   pdata <- data %>% 
     select(DQ02, D06) %>% 
+    filter(D06 != "Architecture") %>% 
     make_proportion(DQ02, D06, order_string = "99", .drop_na = T) %>% 
     mutate(DQ02 = factor(DQ02, levels = data_size_per_year)) %>%
     filter(!is.na(D06))
@@ -333,7 +335,7 @@ create_data_per_year <- function(data, labels, out_path) {
     theme(legend.position = "top", plot.title.position = "plot")
   
   
-  ggsave(out_path, p, width = 9, height = 6)
+  ggsave(out_path, p, width = 9, height = 5)
   
 }
 
@@ -652,6 +654,7 @@ m_data_sharing_faculty <-  function(data, out_path) {
   
   pdata <- data %>% 
     select(DHRP06_SQ001_, D06) %>% 
+    filter(D06 != "Architecture") %>% 
     make_proportion(DHRP06_SQ001_, D06, order_string = "\\sagree", .drop_na = T) %>% 
     mutate(DHRP06_SQ001_ = factor(DHRP06_SQ001_, levels = agreement)) %>% 
     filter(!is.na(D06))
@@ -672,7 +675,7 @@ m_data_sharing_faculty <-  function(data, out_path) {
     guides(fill = guide_legend(nrow = 2, byrow = T))
   
   
-  ggsave(out_path, p, width = 9, height = 6)
+  ggsave(out_path, p, width = 9, height = 5)
 }
 
 
@@ -705,5 +708,29 @@ m_sharing_time <- function(data, out_path) {
 
 
 
+m_long_term_data_storage <- function(data, out_path) {
+  nudge_y <- .04
+  
+  pdata <- data %>% 
+    count(DQ03_SQ002_) %>% 
+    drop_na() %>% 
+    mutate(prop = n/sum(n),
+           label = glue::glue("{n} ({scales::percent(prop, accuracy = .1)})"),
+           DQ03_SQ002_ = factor(DQ03_SQ002_, levels = data_sizes_storage))
+
+  
+  p1 <- pdata %>% 
+    ggplot(aes(fct_rev(DQ03_SQ002_), prop)) +
+    geom_lollipop() +
+    coord_flip(clip = "off") +
+    geom_text(aes(label = label), nudge_y = nudge_y) +
+    scale_y_continuous(labels = function(x) scales::percent(x, accuracy = 1)) +
+    labs(x = NULL, y = "# of respondents (% of total sample)") +
+    theme_ipsum(base_family = "Hind", grid = "X") 
+  
+  
+  
+  ggsave(out_path, p1, width = 7, height = 4)  
+}
 
 
