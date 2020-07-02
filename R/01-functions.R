@@ -734,3 +734,26 @@ m_long_term_data_storage <- function(data, out_path) {
 }
 
 
+m_short_term_storage_data_size  <- function(data, out_path) {
+  
+  pdata <- data %>% 
+    select(DQ03_SQ001_, DQ01) %>% 
+    make_proportion(DQ03_SQ001_, DQ01, order_string = "", .drop_na = T) %>% 
+    mutate(DQ01 = factor(DQ01, levels = data_sizes_production),
+           DQ03_SQ001_ = factor(DQ03_SQ001_, levels = data_sizes_storage))
+  
+  p1 <- pdata %>% 
+    ggplot(aes(DQ03_SQ001_, fct_rev(DQ01), fill = prop)) +
+    geom_tile(colour = "white", size = .85) +
+    scale_fill_viridis_c() +
+    theme_ipsum(base_family = "Hind", grid = "")  +
+    theme(legend.position = "top") +
+    labs(x = "Short-term storage need",
+         y = "Data size of typical research project",
+         fill = "% of responses within dataset size")
+  
+  
+  
+  ggsave(out_path, p1, width = 9, height = 6)  
+}
+

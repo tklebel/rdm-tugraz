@@ -63,5 +63,6 @@ plan <- drake_plan(
   data_amount2 = create_data_amount2(data, labels, D06, out_path = file_out("figs/final/data_amount2.png")),
   sample_overview = create_sample_overview(data, out_path = file_out("figs/final/sample_coverage.png")),
   data_sharing_faculty = m_data_sharing_faculty(data, out_path = file_out("figs/final/data_sharing_faculty.png")),
-  long_term_data_storage = m_long_term_data_storage(data, out_path = file_out("figs/final/long_term_data_storage.png"))
+  long_term_data_storage = m_long_term_data_storage(data, out_path = file_out("figs/final/long_term_data_storage.png")),
+  short_term_storage_vs_data_size = m_short_term_storage_data_size(data, out_path = file_out("figs/final/short_term_storage_vs_data_size.png"))
 )
