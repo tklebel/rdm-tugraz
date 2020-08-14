@@ -745,7 +745,7 @@ m_short_term_storage_data_size  <- function(data, out_path) {
   p1 <- pdata %>% 
     ggplot(aes(DQ03_SQ001_, fct_rev(DQ01), fill = prop)) +
     geom_tile(colour = "white", size = .85) +
-    scale_fill_viridis_c() +
+    scale_fill_viridis_c(labels = percent) +
     theme_ipsum(base_family = "Hind", grid = "")  +
     theme(legend.position = "top") +
     labs(x = "Short-term storage need",
