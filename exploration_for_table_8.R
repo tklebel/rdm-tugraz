@@ -2,10 +2,10 @@ df <- readd(data)
 df %>% 
   select(DHRP06_SQ004_, ORDM02_SQ007_) %>% 
   mutate_all(as.factor) %>% 
-  filter(!str_detect(DHRP06_SQ004_, "Don't"), !str_detect(ORDM02_SQ007_, "Don")) %>% 
+  filter(!str_detect(DHRP06_SQ004_, "Don't"), !str_detect(ORDM02_SQ007_, "Do n")) %>% 
   drop_na() %>% 
   count(DHRP06_SQ004_, ORDM02_SQ007_) %>% 
-  spread(DHRP06_SQ004_, n)
+  spread(ORDM02_SQ007_, n)
 
 
 new_res <- df %>% 
