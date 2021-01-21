@@ -15,7 +15,7 @@ descriptives_grid <- tribble(
 
 plan <- drake_plan(
   raw_data = read_csv(
-    file_in("data/results-survey896447.csv"),
+    file_in("data/raw/results-survey896447.csv"),
     col_types = cols(
       .default = col_character(),
       id = col_double(),
@@ -24,11 +24,11 @@ plan <- drake_plan(
       seed = col_double()
     )),
   data = raw_data %>% 
-    clean_data() %>% 
+    clean_data(file_out("data/processed/survey_processed.csv")) %>% 
     set_factors(),
   labels = make_labels(
-    file_in("data/label_basis.csv"),
-    file_out("data/labels.csv")
+    file_in("data/raw/label_basis.csv"),
+    file_out("data/processed/labels.csv")
   ),
   report = rmarkdown::render(
     knitr_in("general_exploration.Rmd"),

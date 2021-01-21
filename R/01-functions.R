@@ -122,9 +122,10 @@ make_univ_fig <- function(data, labels, var, sort_string, out_path,
 
 # Functions for drake plan -----
 
-clean_data <- function(raw_data) {
+clean_data <- function(raw_data, out_path) {
   raw_data %>% 
-    set_names(., str_replace_all(names(.), "\\[|\\]", "_"))
+    set_names(., str_replace_all(names(.), "\\[|\\]", "_")) %>% 
+    write_csv(out_path)
 }
 
 set_factors <- function(data) {
