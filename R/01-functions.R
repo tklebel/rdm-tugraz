@@ -141,7 +141,7 @@ make_labels <- function(labels, out_path) {
            )) %>% 
     # using pivot_longer with the following spec does not work, since unmatched
     # patterns lead to NA. Maybe a better regex could solve this. for now, 
-    # explicitely using extract fixes the problem.
+    # explicitly using extract fixes the problem.
     #   # pivot_longer(everything(), names_to = c("var", "question", "label"), 
     #                  names_pattern = "(.*)_(.*)\\s\\[(.*)\\]") %>% 
     pivot_longer(everything()) %>% 
