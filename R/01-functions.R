@@ -125,6 +125,8 @@ make_univ_fig <- function(data, labels, var, sort_string, out_path,
 clean_data <- function(raw_data, out_path) {
   raw_data %>% 
     set_names(., str_replace_all(names(.), "\\[|\\]", "_")) %>% 
+    # drop case that finished the survey but skipped large parts
+    filter(id != 508) %>% 
     write_csv(out_path)
 }
 
