@@ -653,12 +653,13 @@ create_sample_overview <- function(data, out_path) {
 }
 
 
-prepare_data_sharing_encouragement <- function(data) {
+prepare_var_by_faculty <- function(data, var, order_string = "\\sagree") {
   data %>% 
-    select(DHRP06_SQ001_, D06) %>% 
+    select({{var}}, D06) %>% 
     filter(D06 != "Architecture") %>% 
-    make_proportion(DHRP06_SQ001_, D06, order_string = "\\sagree", .drop_na = T) %>% 
-    mutate(DHRP06_SQ001_ = factor(DHRP06_SQ001_, levels = agreement)) %>% 
+    make_proportion({{var}}, D06, order_string = order_string,
+                    .drop_na = T) %>% 
+    mutate({{var}} := factor({{var}}, levels = agreement)) %>% 
     filter(!is.na(D06))
 }
 
@@ -666,7 +667,7 @@ prepare_data_sharing_encouragement <- function(data) {
 
 m_data_sharing_faculty <-  function(data, out_path) {
   
-  pdata <- prepare_data_sharing_encouragement(data)
+  pdata <- prepare_var_by_faculty(data, DHRP06_SQ001_)
   
   title <- "Is data sharing with peers encouraged?"
   
@@ -690,7 +691,7 @@ m_data_sharing_faculty <-  function(data, out_path) {
 
 m_data_sharing_faculty_b <-  function(data, out_path) {
   
-  pdata <- prepare_data_sharing_encouragement(data)
+  pdata <- prepare_var_by_faculty(data, DHRP06_SQ001_)
   
   title <- "Is data sharing with peers encouraged?"
   
@@ -710,7 +711,7 @@ m_data_sharing_faculty_b <-  function(data, out_path) {
 
 m_data_sharing_faculty_c <-  function(data, out_path) {
   
-  pdata <- prepare_data_sharing_encouragement(data)
+  pdata <- prepare_var_by_faculty(data, DHRP06_SQ001_)
   
   title <- "Is data sharing with peers encouraged?"
   
@@ -727,20 +728,6 @@ m_data_sharing_faculty_c <-  function(data, out_path) {
   
   ggsave(out_path, p, width = 9, height = 8)
 }
-
-
-
-
-prepare_var_by_faculty <- function(data, var, order_string = "\\sagree") {
-  data %>% 
-    select({{var}}, D06) %>% 
-    filter(D06 != "Architecture") %>% 
-    make_proportion({{var}}, D06, order_string = order_string,
-                    .drop_na = T) %>% 
-    mutate({{var}} := factor({{var}}, levels = agreement)) %>% 
-    filter(!is.na(D06))
-}
-
 
 
 create_data_sharing_better <-  function(data, out_path) {
