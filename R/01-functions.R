@@ -753,6 +753,33 @@ create_data_sharing_better <-  function(data, out_path) {
   ggsave(out_path, p, width = 9, height = 5)
 }
 
+plot_per_faculty <- function(data, var, title) {
+  data %>% 
+    ggplot(aes(fct_reorder(str_wrap(D06, 40), order), prop, 
+               fill = {{var}})) +
+    geom_chicklet(width = .7) +
+    scale_y_continuous(labels = percent) +
+    scale_fill_brewer(palette = "Dark2") +
+    coord_flip() +
+    theme_ipsum(base_family = "Hind") +
+    labs(x = NULL, y = NULL, fill = NULL, 
+         title = title) +
+    theme(legend.position = "top", plot.title.position = "plot") +
+    guides(fill = guide_legend(nrow = 2, byrow = T))
+}
+
+m_mandatory_data_sharing <- function(data, out_path) {
+  
+  pdata <- prepare_var_by_faculty(data, var = DHRP06_SQ002_)
+  
+  title <- "Sharing data is mandatory for most journals"
+  
+  p <- plot_per_faculty(pdata, DHRP06_SQ002_, title = title)
+  
+  
+  ggsave(out_path, p, width = 9, height = 5)
+}
+
 
 
 

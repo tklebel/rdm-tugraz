@@ -66,6 +66,7 @@ plan <- drake_plan(
   data_sharing_faculty_b = m_data_sharing_faculty_b(data, out_path = file_out("figs/final/data_sharing_faculty_b.png")),
   data_sharing_faculty_c = m_data_sharing_faculty_c(data, out_path = file_out("figs/final/data_sharing_faculty_c.png")),
   data_sharing_better = create_data_sharing_better(data, out_path = file_out("figs/final/data_sharing_better.png")),
+  data_sharing_mandatory = m_mandatory_data_sharing(data, out_path = file_out("figs/final/data_sharing_mandatory.png")),
   long_term_data_storage = m_long_term_data_storage(data, out_path = file_out("figs/final/long_term_data_storage.png")),
   short_term_storage_vs_data_size = m_short_term_storage_data_size(data, out_path = file_out("figs/final/short_term_storage_vs_data_size.png"))
 )
