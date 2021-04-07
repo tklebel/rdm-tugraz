@@ -731,6 +731,45 @@ m_data_sharing_faculty_c <-  function(data, out_path) {
 
 
 
+prepare_var_by_faculty <- function(data, var, order_string = "\\sagree") {
+  data %>% 
+    select({{var}}, D06) %>% 
+    filter(D06 != "Architecture") %>% 
+    make_proportion({{var}}, D06, order_string = order_string,
+                    .drop_na = T) %>% 
+    mutate({{var}} := factor({{var}}, levels = agreement)) %>% 
+    filter(!is.na(D06))
+}
+
+
+
+create_data_sharing_better <-  function(data, out_path) {
+  
+  pdata <- prepare_var_by_faculty(data, var = DHRP06_SQ004_)
+  
+  title <- "Sharing data enables better research"
+  
+  p <- pdata %>% 
+    ggplot(aes(fct_reorder(str_wrap(D06, 40), order), prop, 
+               fill = DHRP06_SQ004_)) +
+    geom_chicklet(width = .7) +
+    scale_y_continuous(labels = percent) +
+    scale_fill_brewer(palette = "Dark2") +
+    coord_flip() +
+    theme_ipsum(base_family = "Hind") +
+    labs(x = NULL, y = NULL, fill = NULL, 
+         title = title) +
+    theme(legend.position = "top", plot.title.position = "plot") +
+    guides(fill = guide_legend(nrow = 2, byrow = T))
+  
+  
+  ggsave(out_path, p, width = 9, height = 5)
+}
+
+
+
+
+
 m_sharing_time <- function(data, out_path) {
   
   pdata <- data %>% 
