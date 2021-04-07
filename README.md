@@ -1,5 +1,5 @@
 # Between administration and research: Understanding data management practices in a mid-sized technical university
-[![DOI](https://zenodo.org/badge/274885854.svg)](https://zenodo.org/badge/latestdoi/274885854)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4668983.svg)](https://doi.org/10.5281/zenodo.4668983)
 
 This repository holds code and data for the preprint [Between administration and research: Understanding data management practices in a mid-sized technical university](https://osf.io/preprints/socarxiv/75ac6/)
 on SocArXiv.
