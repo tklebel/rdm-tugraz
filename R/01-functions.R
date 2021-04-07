@@ -653,14 +653,20 @@ create_sample_overview <- function(data, out_path) {
 }
 
 
-m_data_sharing_faculty <-  function(data, out_path) {
-  
-  pdata <- data %>% 
+prepare_data_sharing_encouragement <- function(data) {
+  data %>% 
     select(DHRP06_SQ001_, D06) %>% 
     filter(D06 != "Architecture") %>% 
     make_proportion(DHRP06_SQ001_, D06, order_string = "\\sagree", .drop_na = T) %>% 
     mutate(DHRP06_SQ001_ = factor(DHRP06_SQ001_, levels = agreement)) %>% 
     filter(!is.na(D06))
+}
+
+
+
+m_data_sharing_faculty <-  function(data, out_path) {
+  
+  pdata <- prepare_data_sharing_encouragement(data)
   
   title <- "Is data sharing with peers encouraged?"
   
@@ -680,6 +686,49 @@ m_data_sharing_faculty <-  function(data, out_path) {
   
   ggsave(out_path, p, width = 9, height = 5)
 }
+
+
+m_data_sharing_faculty_b <-  function(data, out_path) {
+  
+  pdata <- prepare_data_sharing_encouragement(data)
+  
+  title <- "Is data sharing with peers encouraged?"
+  
+  p <- pdata %>% 
+    ggplot(aes(DHRP06_SQ001_, prop)) +
+    geom_col() +
+    facet_wrap(~D06) +
+    scale_y_continuous(labels = percent) +
+    coord_flip() +
+    theme_ipsum(base_family = "Hind") +
+    labs(x = NULL, y = NULL, title = title) +
+    theme(legend.position = "top", plot.title.position = "plot")
+  
+  
+  ggsave(out_path, p, width = 9, height = 5)
+}
+
+m_data_sharing_faculty_c <-  function(data, out_path) {
+  
+  pdata <- prepare_data_sharing_encouragement(data)
+  
+  title <- "Is data sharing with peers encouraged?"
+  
+  p <- pdata %>% 
+    ggplot(aes(str_wrap(D06, width = 35), prop)) +
+    geom_col(width = .7) +
+    facet_wrap(~DHRP06_SQ001_) +
+    scale_y_continuous(labels = percent) +
+    coord_flip() +
+    theme_ipsum(base_family = "Hind") +
+    labs(x = NULL, y = NULL, title = title) +
+    theme(legend.position = "top", plot.title.position = "plot")
+  
+  
+  ggsave(out_path, p, width = 9, height = 8)
+}
+
+
 
 
 m_sharing_time <- function(data, out_path) {
