@@ -656,7 +656,8 @@ create_sample_overview <- function(data, out_path) {
 prepare_var_by_faculty <- function(data, var, order_string = "\\sagree") {
   data %>% 
     select({{var}}, D06) %>% 
-    filter(D06 != "Architecture") %>% 
+    filter(D06 != "Architecture",
+           {{var}} != "Don't know/Cannot answer") %>% 
     make_proportion({{var}}, D06, order_string = order_string,
                     .drop_na = T) %>% 
     mutate({{var}} := factor({{var}}, levels = agreement)) %>% 
